@@ -1,0 +1,5 @@
+/aws-infra/database-infra/.terraform
+
+/.idea
+
+/auth-app/target
