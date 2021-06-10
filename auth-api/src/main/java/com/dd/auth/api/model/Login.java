@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 @Data
 @Entity
 @Table(name = "login")
@@ -14,10 +16,11 @@ import javax.persistence.*;
 public class Login {
 
     @Id
-    private Long id;
+    @GeneratedValue(strategy = IDENTITY)
+    private Long userId;
 
     @Column(name = "username")
-    private String userName;
+    private String username;
 
     @Column(name = "password")
     private String password;
@@ -26,8 +29,6 @@ public class Login {
     private String passphrase;
 
     @OneToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "profile_id", nullable = false)
     private Profile profile;
-
-
 }

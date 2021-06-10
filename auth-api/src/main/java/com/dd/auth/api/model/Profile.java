@@ -6,8 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Set;
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
 @Entity
@@ -18,7 +23,8 @@ import java.util.Set;
 public class Profile {
 
     @Id
-    private Long id;
+    @GeneratedValue(strategy = IDENTITY)
+    private Long profileId;
 
     @Column(name = "name")
     private String name;
@@ -30,21 +36,24 @@ public class Profile {
     private String address;
 
     @Column(name = "email", unique = true, nullable = false)
+    @Email
     private String email;
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true, nullable = false)
+    @NotBlank(message = "Username is required")
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
+    @NotBlank(message = "Password is required")
     private String password;
 
     @Column(name = "approved")
     private Boolean approved;
 
-    @Column(name = "birthday", columnDefinition = "DATE")
-    private LocalDate bday;
+    @Column(name = "created")
+    private Instant created;
 
-    @OneToOne(fetch = FetchType.EAGER,
+    @OneToOne(fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             mappedBy = "profile")
     private Login login;

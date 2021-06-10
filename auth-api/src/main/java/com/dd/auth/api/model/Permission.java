@@ -23,7 +23,7 @@ public class Permission {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(targetEntity = PermissionSets.class, mappedBy = "id",
+    @OneToMany(targetEntity = PermissionSets.class,
             orphanRemoval = false, fetch = FetchType.LAZY)
     private Set<PermissionSets> permissionSets;
 }

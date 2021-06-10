@@ -8,14 +8,19 @@ import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 @Data
 @Entity
-@Table(name = "permission_sets")
+@Table(name = "permissionsets")
 @AllArgsConstructor
 @NoArgsConstructor
 public class PermissionSets {
 
     @Id
+    @GeneratedValue(strategy = IDENTITY)
+    private Long permission_id;
+
     private Long id;
 
     @Column(name = "login_id")
