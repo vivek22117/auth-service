@@ -22,5 +22,5 @@ public class Role {
     @OneToMany(targetEntity = PermissionSets.class,
             mappedBy = "id", orphanRemoval = false,
             fetch = FetchType.LAZY)
-    private Set<Role> role;
+    private Set<PermissionSets> permissionSets;
 }
