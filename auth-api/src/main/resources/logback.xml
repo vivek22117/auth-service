@@ -54,7 +54,7 @@
                 </encoder>
             </appender>
 
-            <logger name="com.weather.api" level="DEBUG" additivity="false">
+            <logger name="com.dd.auth.api" level="DEBUG" additivity="false">
                 <appender-ref ref="FILE" />
             </logger>
 
