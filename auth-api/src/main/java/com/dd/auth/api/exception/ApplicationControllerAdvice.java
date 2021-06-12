@@ -43,12 +43,6 @@ public class ApplicationControllerAdvice extends ResponseEntityExceptionHandler 
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NO_CONTENT);
     }
 
-    @ExceptionHandler(WeatherDataNoFoundException.class)
-    public ResponseEntity<Object> handleNoDataFound(WeatherDataNoFoundException exception) {
-        log.error("No data found");
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
                                                                          HttpHeaders headers, HttpStatus status,
