@@ -1,5 +1,5 @@
 server:
-  port: 9002
+  port: 9004
 
 spring:
   main:
@@ -31,6 +31,6 @@ management:
           - prometheus
       base-path: /internal
   server:
-    port: 8002
+    port: 9004
 
 
