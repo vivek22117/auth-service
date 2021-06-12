@@ -1,30 +1,46 @@
 package com.dd.auth.api.controller;
 
 import com.dd.auth.api.entity.ChannelInfo;
+import com.dd.auth.api.model.dto.RegisterRequest;
+import com.dd.auth.api.service.AuthService;
+import com.dd.auth.api.service.RefreshTokenService;
+import com.dd.auth.api.util.AppUtility;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import static com.dd.auth.api.util.AppUtility.*;
 
 
+@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 @RestController
-@RefreshScope
+@RequestMapping(API_AUTH_ROOT_URI)
+@Slf4j
 public class AuthController {
 
-    @Value("${channel.local: No Value}")
-    private String local;
+    private final AuthService authService;
+    private final RefreshTokenService refreshTokenService;
 
-    @Value("${channel.owner: No Owner}")
-    private String owner;
 
-    @Value("${channel.link: No link}")
-    private String link;
+    @Autowired
+    public AuthController(AuthService authService, RefreshTokenService refreshTokenService) {
+        this.authService = authService;
+        this.refreshTokenService = refreshTokenService;
+    }
 
-    @Value("${spring.h2.console.path: No path}")
-    private String path;
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @PostMapping(AUTH_SIGNUP_URI)
+    public ResponseEntity<String> signUp(@RequestBody RegisterRequest request) {
+        authService.signup(request);
+        return new ResponseEntity<>("User Registration Successful!", HttpStatus.OK);
+    }
 
-    @GetMapping("/data-info")
-    public ChannelInfo getDataInfo() {
-        return new ChannelInfo(local, owner, link, path);
+    @GetMapping(ACCOUNT_VERIFICATION_TOKEN_URI)
+    public ResponseEntity<String> verifyToken(@PathVariable String token) {
+        authService.verityToken(token);
+        return new ResponseEntity<>("Account Activated Successfully!", HttpStatus.OK);
     }
 }
