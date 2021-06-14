@@ -1,16 +1,14 @@
 package com.dd.auth.api.controller;
 
-import com.dd.auth.api.entity.ChannelInfo;
 import com.dd.auth.api.model.dto.AuthenticationResponse;
 import com.dd.auth.api.model.dto.LoginRequest;
 import com.dd.auth.api.model.dto.RefreshTokenRequest;
 import com.dd.auth.api.model.dto.RegisterRequest;
 import com.dd.auth.api.service.AuthService;
 import com.dd.auth.api.service.RefreshTokenService;
-import com.dd.auth.api.util.AppUtility;
+import io.micrometer.core.annotation.Timed;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +37,7 @@ public class AuthController {
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping(AUTH_SIGNUP_URI)
+    @Timed(value = "auth.signup", description = "Time taken to signUp")
     public ResponseEntity<String> signUp(@RequestBody RegisterRequest request) {
         authService.signup(request);
         return new ResponseEntity<>("User Registration Successful!", HttpStatus.OK);
