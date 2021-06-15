@@ -1,6 +1,5 @@
 package com.dd.auth.api.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +8,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.Set;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -59,7 +57,7 @@ public class Profile {
     private Login login;
 
     @OneToMany(targetEntity = PermissionSets.class,
-            mappedBy = "id",  orphanRemoval = false,
+            mappedBy = "id", orphanRemoval = false,
             fetch = FetchType.LAZY)
     private Set<PermissionSets> permissionSets;
 }

@@ -26,7 +26,7 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Auth API")
+                .title("Auth API Service")
                 .version("v1")
                 .description("This page documents the Authentication APIs version v1")
                 .contact(new Contact("Vivek Mishra", "N/A", "vivekkmishra2020@gmail.com"))
