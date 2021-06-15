@@ -38,9 +38,9 @@
         </then>
         <else>
             <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-                <file>./log/auth-api-log.log</file>
+                <file>./log/auth-service-log.log</file>
                 <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                    <fileNamePattern>./log/auth-api.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                    <fileNamePattern>./log/auth-service.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
                     <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                         <maxFileSize>5MB</maxFileSize>
                     </timeBasedFileNamingAndTriggeringPolicy>
