@@ -1,0 +1,23 @@
+[
+  {
+    "Image": "${auth_api_image}:latest",
+    "Memory": 256,
+    "Name": "Auth-Service",
+    "cpu": 256,
+    "LogConfiguration": {
+      "LogDriver": "awslogs",
+      "Options": {
+        "awslogs-group": "${log_group}",
+        "awslogs-stream-prefix": "auth-service-app",
+        "awslogs-region": "${aws_region}"
+      }
+    },
+    "PortMappings": [
+      {
+        "ContainerPort": 9004,
+        "Protocol": "tcp",
+        "hostPort": 0
+      }
+    ]
+  }
+]
