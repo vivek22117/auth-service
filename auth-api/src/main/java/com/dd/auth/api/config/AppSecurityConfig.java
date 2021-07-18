@@ -65,7 +65,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/**")
                 .permitAll()
                 .antMatchers("/internal",
-                        "/h2/**",
+                        "/h2-console/**",
                         "/v2/api-docs",
                         "/configuration/ui",
                         "/swagger-resources/**",
