@@ -1,10 +1,7 @@
 package com.dd.auth.api.service;
 
 import com.dd.auth.api.exception.ApplicationException;
-import com.dd.auth.api.model.Login;
-import com.dd.auth.api.model.PermissionSets;
-import com.dd.auth.api.model.Profile;
-import com.dd.auth.api.model.VerificationToken;
+import com.dd.auth.api.model.*;
 import com.dd.auth.api.model.dto.AuthenticationResponse;
 import com.dd.auth.api.model.dto.LoginRequest;
 import com.dd.auth.api.model.dto.RefreshTokenRequest;
@@ -55,7 +52,7 @@ public class AuthService {
     private final LoginRepository loginRepository;
     private final PasswordEncoder passwordEncoder;
     private final AppJwtTokenUtil jwtTokenUtil;
-//    private final SNSMailService mailService;
+    private final SNSMailService mailService;
 
     @Transactional(readOnly = true)
     public Profile getCurrentUser() {
@@ -91,10 +88,10 @@ public class AuthService {
         addPermissions(login, profile);
 
         String token = generateVerificationToken(profile);
-//        mailService.sendMail(new NotificationEmail("Please Activate Your Account!",
-//                profile.getEmail(), "Thank you for signing up to DoubleDigit Cloud-Solutions," +
-//                " please click on the below link to activate your account :" +
-//                "http://localhost:9005/api/auth/accountVerification/" + token));
+        mailService.sendMail(new NotificationEmail("Please Activate Your Account!",
+                profile.getEmail(), "Thank you for signing up to DoubleDigit Cloud-Solutions," +
+                " please click on the below link to activate your account :" +
+                "http://localhost:9005/api/auth/accountVerification/" + token));
     }
 
     private Set<PermissionSets> addPermissions(Login login, Profile profile) {
