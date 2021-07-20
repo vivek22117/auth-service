@@ -10,7 +10,7 @@ variable "environment" {
 }
 
 variable "enabled" {
-  type = bool
+  type        = bool
   description = "Boolean value to define provision or do-not-provision the resources"
 }
 
@@ -34,7 +34,7 @@ variable "s3_bucket_prefix" {
 
 #####=============================Applicaiton Variables=================#####
 variable "secret_version" {
-  type = string
+  type        = string
   description = "New version name for secrets, like v1, v2....., c1, c2.....s1, s2"
 }
 
@@ -69,22 +69,22 @@ variable "db_engine_version" {
 }
 
 variable "database_name" {
-  type = string
+  type        = string
   description = "Auth-service database name"
 }
 
 variable "username" {
-  type = string
+  type        = string
   description = "Database user name"
 }
 
 variable "password" {
-  type = string
+  type        = string
   description = "Database password"
 }
 
 variable "skip_final_snapshot" {
-  type = bool
+  type        = bool
   description = "Should a final snapshot be created on cluster destroy"
 }
 
@@ -131,7 +131,7 @@ variable "min_capacity" {
 
 
 variable "auto_pause_secs" {
-  type = number
+  type        = number
   description = "Number of seconds before an Aurora DB cluster in serverless mode is paused"
 }
 
