@@ -1,7 +1,7 @@
 package com.dd.auth.api.service;
 
 import com.dd.auth.api.exception.ApplicationException;
-import com.dd.auth.api.model.RefreshToken;
+import com.dd.auth.api.entity.RefreshToken;
 import com.dd.auth.api.repository.RefreshTokenRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

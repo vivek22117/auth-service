@@ -1,13 +1,12 @@
 package com.dd.auth.api.service;
 
-import com.dd.auth.api.model.Login;
+import com.dd.auth.api.entity.Login;
 import com.dd.auth.api.repository.LoginRepository;
 import com.dd.auth.api.repository.PermissionRepository;
 import com.dd.auth.api.repository.PermissionSetsRepository;
 import com.dd.auth.api.repository.RoleRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
