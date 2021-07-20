@@ -1,6 +1,6 @@
 package com.dd.auth.api.repository;
 
-import com.dd.auth.api.model.Login;
+import com.dd.auth.api.entity.Login;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;

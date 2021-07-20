@@ -1,6 +1,6 @@
 package com.dd.auth.api.repository;
 
-import com.dd.auth.api.model.VerificationToken;
+import com.dd.auth.api.entity.VerificationToken;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

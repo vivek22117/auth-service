@@ -1,6 +1,6 @@
 package com.dd.auth.api.repository;
 
-import com.dd.auth.api.model.Profile;
+import com.dd.auth.api.entity.Profile;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

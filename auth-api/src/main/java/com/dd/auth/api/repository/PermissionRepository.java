@@ -1,6 +1,6 @@
 package com.dd.auth.api.repository;
 
-import com.dd.auth.api.model.Permission;
+import com.dd.auth.api.entity.Permission;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

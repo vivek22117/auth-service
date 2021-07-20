@@ -1,6 +1,6 @@
 package com.dd.auth.api.repository;
 
-import com.dd.auth.api.model.RefreshToken;
+import com.dd.auth.api.entity.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
