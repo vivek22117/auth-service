@@ -1,4 +1,4 @@
-package com.dd.auth.api.model;
+package com.dd.auth.api.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

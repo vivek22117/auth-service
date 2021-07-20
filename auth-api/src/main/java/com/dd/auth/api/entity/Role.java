@@ -1,18 +1,14 @@
-package com.dd.auth.api.model;
+package com.dd.auth.api.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "permission")
-@NoArgsConstructor
-@AllArgsConstructor
-public class Permission {
+@Table(name = "role")
+public class Role {
 
     @Id
     private Long id;
@@ -24,6 +20,7 @@ public class Permission {
     private String description;
 
     @OneToMany(targetEntity = PermissionSets.class,
-            orphanRemoval = false, fetch = FetchType.LAZY)
+            mappedBy = "id", orphanRemoval = false,
+            fetch = FetchType.LAZY)
     private Set<PermissionSets> permissionSets;
 }
