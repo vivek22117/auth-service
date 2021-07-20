@@ -1,5 +1,9 @@
 package com.dd.auth.api.service;
 
+import com.dd.auth.api.entity.Login;
+import com.dd.auth.api.entity.PermissionSets;
+import com.dd.auth.api.entity.Profile;
+import com.dd.auth.api.entity.VerificationToken;
 import com.dd.auth.api.exception.ApplicationException;
 import com.dd.auth.api.model.*;
 import com.dd.auth.api.model.dto.AuthenticationResponse;
