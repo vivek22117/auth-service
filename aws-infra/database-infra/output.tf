@@ -1,4 +1,4 @@
-output "db_custer_arn" {
+output "db_cluster_arn" {
   value = aws_rds_cluster.auth_service_db[*].arn
 }
 
