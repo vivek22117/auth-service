@@ -37,7 +37,7 @@ resource "aws_alb_listener_rule" "ecs_alb_listener_rule" {
   depends_on = [aws_lb_target_group.auth_service_ecs_alb_tg]
 
   listener_arn = data.terraform_remote_state.ecs_cluster.outputs.alb-listner-arn
-  priority     = "001"
+  priority     = "002"
 
   action {
     type             = "forward"
@@ -45,7 +45,7 @@ resource "aws_alb_listener_rule" "ecs_alb_listener_rule" {
   }
   condition {
     path_pattern {
-      values = ["/"]
+      values = ["/*"]
     }
   }
 }
