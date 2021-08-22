@@ -62,5 +62,3 @@ data "template_file" "config_server_task" {
     aws_region     = var.default_region
   }
 }
-
-data "aws_caller_identity" "current" {}
