@@ -64,7 +64,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers(HttpMethod.GET, "/api/**")
                 .permitAll()
-                .antMatchers("/internal",
+                .antMatchers("/internal/**",
                         "/h2-console/**",
                         "/v2/api-docs",
                         "/configuration/ui",
