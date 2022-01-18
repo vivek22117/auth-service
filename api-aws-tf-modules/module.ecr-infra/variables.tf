@@ -1,11 +1,6 @@
 ######################################################################
 # Global variables for VPC, Subnet, Routes and Bastion Host          #
 ######################################################################
-variable "profile" {
-  type        = string
-  description = "AWS Profile name for credentials"
-}
-
 variable "default_region" {
   type        = string
   description = "AWS region to deploy resources"
@@ -54,25 +49,12 @@ variable "isMonitoring" {
   description = "Monitoring is enabled or disabled for the resources creating"
 }
 
-#####=============Local & Default Variables===============#####
-
-variable "dyanamoDB_prefix" {
-  type    = string
-  default = "doubledigit-tfstate"
-}
-
-variable "s3_bucket_prefix" {
-  type    = string
-  default = "doubledigit-tfstate"
-}
-
-
 locals {
   common_tags = {
     owner       = var.owner
     team        = var.team
     environment = var.environment
     monitoring  = var.isMonitoring
-    Project     = "DD-Solutions"
+    Project     = "Auth-API"
   }
 }
