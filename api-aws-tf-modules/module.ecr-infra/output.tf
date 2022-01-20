@@ -16,11 +16,3 @@ output "ecr_registry_url" {
 output "account_id" {
   value = data.aws_caller_identity.current.account_id
 }
-
-output "role_arn" {
-  value = local.common_arns.role_arn
-}
-
-output "user_arn" {
-  value = local.common_arns.user_arn
-}

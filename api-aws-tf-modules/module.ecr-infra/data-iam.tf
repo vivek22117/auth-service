@@ -34,10 +34,3 @@ data "aws_iam_policy_document" "ecr_access_policy" {
 }
 
 data "aws_caller_identity" "current" {}
-
-locals {
-  common_arns = {
-    user_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/JenkinsSlavesRole"
-    role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/doubledigit"
-  }
-}
