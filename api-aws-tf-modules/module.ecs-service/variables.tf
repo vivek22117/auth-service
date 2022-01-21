@@ -1,9 +1,4 @@
 #####=================Global Variables==============#####
-variable "profile" {
-  type        = string
-  description = "AWS Profile name for credentials"
-}
-
 variable "default_region" {
   type        = string
   description = "AWS region to deploy our resources"
@@ -48,15 +43,6 @@ variable "default_target_group_port" {
   description = "Target group port for ECS Cluster"
 }
 
-#################################
-#  Default Variables            #
-#################################
-variable "s3_bucket_prefix" {
-  type        = string
-  description = "S3 deployment bucket prefix"
-  default     = "doubledigit-tfstate"
-}
-
 
 ####################################
 # Local variables                  #
@@ -64,7 +50,20 @@ variable "s3_bucket_prefix" {
 locals {
   common_tags = {
     owner       = "Vivek"
-    team        = "TeamConcept"
+    team        = "DD-Team"
     environment = var.environment
   }
+}
+
+#####============================ECS Service Discovery Variables================================#####
+variable "service_discovery" {
+  description = "A service discovery block"
+  type        = map(string)
+  default     = {}
+}
+
+variable "service_discovery_health_check_custom_config" {
+  description = "A service discovery health check custom config block"
+  type        = map(string)
+  default     = {}
 }
