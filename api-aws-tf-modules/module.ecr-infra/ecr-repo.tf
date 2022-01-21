@@ -2,7 +2,7 @@ resource "aws_ecr_repository" "auth_api_ecr" {
   count = var.enabled ? 1 : 0
 
   name = var.repo_name
-  tags = merge(local.common_tags, map("Name", "auth-api-ecr-repo"))
+  tags = merge(local.common_tags, map("Name", "${var.repo_name}-repo"))
 }
 
 resource "aws_ecr_lifecycle_policy" "config_server_lifecycle" {
