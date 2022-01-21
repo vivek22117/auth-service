@@ -15,8 +15,8 @@ data "terraform_remote_state" "ecs_cluster" {
   backend = "s3"
 
   config = {
-    bucket  = "${var.s3_bucket_prefix}-${var.environment}-${var.default_region}"
-    key     = "state/${var.environment}/ecs-cluster/terraform.tfstate"
+    bucket  = "${var.environment}-tfstate-${data.aws_caller_identity.current.account_id}-${var.default_region}"
+    key     = "state/${var.environment}/ec2-ecs-cluster/terraform.tfstate"
     region  = var.default_region
   }
 }
