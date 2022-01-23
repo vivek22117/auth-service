@@ -1,5 +1,4 @@
 resource "aws_ecs_task_definition" "auth_api_task_def" {
-  container_definitions = data.template_file.config_server_task.rendered
   family                = "${var.environment}_auth_service"
 
   requires_compatibilities = ["EC2"]
@@ -7,12 +6,17 @@ resource "aws_ecs_task_definition" "auth_api_task_def" {
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_task_execution_role.arn
 
+  container_definitions = data.template_file.config_server_task.rendered
+
   tags = merge(local.common_tags, map("Name", "Auth-Service-Task"))
 }
 
 
 resource "aws_ecs_service" "auth_api_ecs_service" {
-  depends_on = [aws_iam_role.ecs_service_role, aws_iam_role.ecs_task_execution_role]
+  depends_on = [
+    aws_iam_role.ecs_service_role,
+    aws_iam_role.ecs_task_execution_role
+  ]
 
   name                = var.component_name
   iam_role            = aws_iam_role.ecs_service_role.name
@@ -28,7 +32,13 @@ resource "aws_ecs_service" "auth_api_ecs_service" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.auth_service_ecs_alb_tg.arn
-    container_name   = "Auth-API"
+    container_name   = "auth-api"
+    container_port   = 9004
+  }
+
+  service_registries {
+    registry_arn = aws_service_discovery_service.auth_api_sd.arn
+    container_name   = "auth-api"
     container_port   = 9004
   }
 }
@@ -36,7 +46,7 @@ resource "aws_ecs_service" "auth_api_ecs_service" {
 resource "aws_alb_listener_rule" "ecs_alb_listener_rule" {
   depends_on = [aws_lb_target_group.auth_service_ecs_alb_tg]
 
-  listener_arn = data.terraform_remote_state.ecs_cluster.outputs.alb-listner-arn
+  listener_arn = data.terraform_remote_state.ecs_cluster.outputs.alb-listener-arn
   priority     = "002"
 
   action {
