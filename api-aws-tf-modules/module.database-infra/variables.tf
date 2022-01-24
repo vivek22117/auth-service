@@ -1,9 +1,4 @@
 #####===================Global Variables======================#####
-variable "profile" {
-  type        = string
-  description = "AWS Profile name for credentials"
-}
-
 variable "environment" {
   type        = string
   description = "Environment to be configured 'dev', 'qa', 'prod'"
@@ -14,25 +9,12 @@ variable "enabled" {
   description = "Boolean value to define provision or do-not-provision the resources"
 }
 
-
-#####==========================Default Variables================#####
 variable "default_region" {
   type    = string
   default = "us-east-1"
 }
 
-variable "dyanamoDB_prefix" {
-  type    = string
-  default = "doubledigit-tfstate"
-}
-
-variable "s3_bucket_prefix" {
-  type    = string
-  default = "doubledigit-tfstate"
-}
-
-
-#####=============================Applicaiton Variables=================#####
+#####=============================Application Variables=================#####
 variable "secret_version" {
   type        = string
   description = "New version name for secrets, like v1, v2....., c1, c2.....s1, s2"
@@ -140,7 +122,7 @@ variable "auto_pause_secs" {
 locals {
   common_tags = {
     owner       = "Vivek"
-    team        = "DoubleDigitTeam"
+    team        = "DD-Team"
     environment = var.environment
   }
 }
