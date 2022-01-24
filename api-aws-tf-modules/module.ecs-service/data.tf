@@ -48,3 +48,6 @@ data "template_file" "config_server_task" {
     aws_region     = var.default_region
   }
 }
+
+# used for accessing Account ID and ARN
+data "aws_caller_identity" "current" {}
