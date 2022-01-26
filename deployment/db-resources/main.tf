@@ -1,7 +1,7 @@
 ####################################################
-#        Auth API Module Implementation            #
+#        Auth API Module DB Implementation         #
 ####################################################
-module "vpc-es-cluster" {
+module "auth_api_db_impl" {
   source = "../../api-aws-tf-modules/module.database-infra"
 
   default_region = var.default_region
