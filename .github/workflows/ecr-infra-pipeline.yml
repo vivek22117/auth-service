@@ -74,7 +74,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
 
-      - name: Terraform Init For Backend Server
+      - name: Terraform Init For Auth-API DB
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: ${{ env.tf_version }}
@@ -92,7 +92,7 @@ jobs:
           tf_actions_working_dir: ${{ env.tf_working_dir_app }}
           tf_actions_comment: false
 
-      - name: Terraform Plan ECR Repository
+      - name: Terraform Plan Auth-API DB
         id: app-plan
         uses: hashicorp/terraform-github-actions@master
         with:
@@ -102,7 +102,7 @@ jobs:
           tf_actions_subcommand: 'plan'
           args: '-var="environment=${{ env.environment }}" -var-file="${{ env.environment }}.tfvars"'
 
-      - name: Terraform Apply For ECR Repository
+      - name: Terraform Apply For Auth-API DB
         if: steps.app-plan.outputs.tf_actions_plan_has_changes == 'true' && github.event.inputs.action == 'Create'
         uses: hashicorp/terraform-github-actions@master
         with:
@@ -112,27 +112,8 @@ jobs:
           tf_actions_comment: false
           args: '-auto-approve -var="environment=${{ env.environment }}" -var-file="${{ env.environment }}.tfvars"'
 
-      - name: Login to Amazon ECR
-        if: github.event.inputs.action == 'Create'
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build, tag, and push image to Amazon ECR
-        if: github.event.inputs.action == 'Create'
-        id: build-image
-        working-directory: ${{ env.maven_dir }}
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: auth-server
-          IMAGE_TAG: latest
-        run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          echo "Pushing image to ECR..."
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-
-
-      - name: Terraform Destroy For ECR Repository
+      - name: Terraform Destroy For Auth-API DB
         if: github.event.inputs.action == 'Destroy'
         uses: hashicorp/terraform-github-actions@master
         with:
