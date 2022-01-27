@@ -11,8 +11,8 @@ default_target_group_port = 9004
 
 service_discovery = {
   "routing_policy" = "MULTIVALUE"
-  "ttl" = 60
-  "type"= "A"
+  "ttl"            = 60
+  "type"           = "A"
 }
 
 service_discovery_health_check_custom_config = {
