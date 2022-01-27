@@ -1,5 +1,5 @@
 resource "aws_ecs_task_definition" "auth_api_task_def" {
-  family                = "${var.environment}_auth_service"
+  family = "${var.environment}_auth_service"
 
   requires_compatibilities = ["EC2"]
   network_mode             = var.ecs_task_mode
@@ -37,9 +37,9 @@ resource "aws_ecs_service" "auth_api_ecs_service" {
   }
 
   service_registries {
-    registry_arn = aws_service_discovery_service.auth_api_sd.arn
-    container_name   = "auth-api"
-    container_port   = 9004
+    registry_arn   = aws_service_discovery_service.auth_api_sd.arn
+    container_name = "auth-api"
+    container_port = 9004
   }
 }
 
