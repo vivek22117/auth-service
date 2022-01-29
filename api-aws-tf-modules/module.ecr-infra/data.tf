@@ -11,3 +11,5 @@ data "terraform_remote_state" "vpc" {
     region = var.default_region
   }
 }
+
+data "aws_caller_identity" "current" {}
