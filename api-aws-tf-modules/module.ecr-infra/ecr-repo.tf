@@ -5,7 +5,7 @@ resource "aws_ecr_repository" "auth_api_ecr" {
   tags = merge(local.common_tags, map("Name", "${var.repo_name}-repo"))
 }
 
-resource "aws_ecr_lifecycle_policy" "config_server_lifecycle" {
+resource "aws_ecr_lifecycle_policy" "auth_api_lifecycle" {
   count      = var.enabled ? 1 : 0
   repository = join("", aws_ecr_repository.auth_api_ecr.*.name)
 
@@ -41,7 +41,7 @@ resource "aws_ecr_lifecycle_policy" "config_server_lifecycle" {
 EOF
 }
 
-resource "aws_ecr_repository_policy" "config_server_app_ecr_policy" {
+resource "aws_ecr_repository_policy" "auth_api_ecr_policy" {
   depends_on = [data.aws_iam_policy_document.ecr_access_policy]
 
   repository = join("", aws_ecr_repository.auth_api_ecr.*.name)
