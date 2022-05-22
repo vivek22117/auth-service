@@ -1,5 +1,6 @@
 sg_name  = "auth-service-sg"
-username = "doubledigit"
+username = "admin"
+password = "password"
 
 sub_group_name    = "auth-service-subnet-group"
 cluster_prefix    = "auth-service"
