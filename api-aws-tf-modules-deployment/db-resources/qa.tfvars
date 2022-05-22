@@ -11,6 +11,7 @@ db_engine         = "aurora-postgresql"
 db_engine_version = "10.11"
 db_engine_mode    = "serverless"
 database_name     = "auth_service"
+secret_version = "v1"
 
 skip_final_snapshot          = true
 backup_retention_period      = "1"
