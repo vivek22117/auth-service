@@ -2,6 +2,8 @@ sg_name  = "auth-service-sg"
 username = "admin"
 password = "password"
 
+enabled = true
+
 sub_group_name    = "auth-service-subnet-group"
 cluster_prefix    = "auth-service"
 azs               = ["us-east-1a", "us-east-1b", "us-east-1c"]
