@@ -124,5 +124,6 @@ locals {
     owner       = "Vivek"
     team        = "DD-Team"
     environment = var.environment
+    Project = "DD-Auth-Service"
   }
 }

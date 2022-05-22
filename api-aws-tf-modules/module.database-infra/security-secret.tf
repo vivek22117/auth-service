@@ -35,6 +35,8 @@ resource "aws_security_group" "auth_service_db_sg" {
 resource "aws_secretsmanager_secret" "auth_service_secrets" {
   name        = "auth-service/client/credentials/${var.secret_version}"
   description = "Auth-Service DB credentials"
+
+  tags = merge(local.common_tags, map("Name", "${var.environment}-auth-serivce"))
 }
 
 resource "aws_secretsmanager_secret_version" "auth_service_cred" {
