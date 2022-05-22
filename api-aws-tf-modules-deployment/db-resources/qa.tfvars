@@ -5,7 +5,7 @@ sub_group_name    = "auth-service-subnet-group"
 cluster_prefix    = "auth-service"
 azs               = ["us-east-1a", "us-east-1b", "us-east-1c"]
 db_engine         = "aurora-postgresql"
-db_engine_version = "10.7"
+db_engine_version = "10.11"
 db_engine_mode    = "serverless"
 database_name     = "auth_service"
 
