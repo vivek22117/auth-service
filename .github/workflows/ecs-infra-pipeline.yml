@@ -17,7 +17,7 @@ on:
 
 env:
   tf_version: '0.13.5'
-  tf_working_dir_app: './deployment/ecs-resources'
+  tf_working_dir_app: './api-aws-tf-modules-deployment/ecs-resources'
   aws_region: 'us-east-1'
   environment: ${{ github.event.inputs.env }}
 
