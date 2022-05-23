@@ -22,3 +22,5 @@ scaling_auto_pause           = true
 max_capacity                 = 4
 min_capacity                 = 2
 auto_pause_secs              = 900
+
+sns_email_list = ["vivekmishra22117@gmail.com"]

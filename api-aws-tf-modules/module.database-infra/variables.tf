@@ -117,6 +117,11 @@ variable "auto_pause_secs" {
   description = "Number of seconds before an Aurora DB cluster in serverless mode is paused"
 }
 
+variable "sns_email_list" {
+  type        = list(string)
+  description = "The email list of subscribers to the SNS Topic."
+}
+
 
 #####===============Local variables==================#####
 locals {
@@ -124,6 +129,6 @@ locals {
     owner       = "Vivek"
     team        = "DD-Team"
     environment = var.environment
-    Project = "DD-Auth-Service"
+    Project     = "DD-Auth-Service"
   }
 }
