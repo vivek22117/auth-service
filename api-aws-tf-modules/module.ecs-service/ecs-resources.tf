@@ -6,7 +6,7 @@ resource "aws_ecs_task_definition" "auth_api_task_def" {
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_task_execution_role.arn
 
-  container_definitions = data.template_file.config_server_task.rendered
+  container_definitions = data.template_file.auth_service_task.rendered
 
   tags = merge(local.common_tags, map("Name", "Auth-Service-Task"))
 }
