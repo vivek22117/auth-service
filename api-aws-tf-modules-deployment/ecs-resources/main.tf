@@ -14,4 +14,5 @@ module "auth_api_ecs_module" {
   ecs_task_mode             = var.ecs_task_mode
   service_desired_count     = var.service_desired_count
   service_launch_type       = var.service_launch_type
+  ecs_dns_name              = var.ecs_dns_name
 }
