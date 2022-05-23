@@ -43,6 +43,11 @@ variable "default_target_group_port" {
   description = "Target group port for ECS Cluster"
 }
 
+variable "ecs_dns_name" {
+  type        = string
+  description = "dns name for config server elb"
+}
+
 
 ####################################
 # Local variables                  #

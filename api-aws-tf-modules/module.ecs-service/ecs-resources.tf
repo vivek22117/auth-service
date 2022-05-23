@@ -54,8 +54,8 @@ resource "aws_alb_listener_rule" "ecs_alb_listener_rule" {
     target_group_arn = aws_lb_target_group.auth_service_ecs_alb_tg.arn
   }
   condition {
-    path_pattern {
-      values = ["/*"]
+    host_header {
+      values = ["${var.component_name}.cloud-interview.in"]
     }
   }
 }

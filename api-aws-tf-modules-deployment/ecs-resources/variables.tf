@@ -44,6 +44,11 @@ variable "default_target_group_port" {
 }
 
 
+variable "ecs_dns_name" {
+  type        = string
+  description = "dns name for config server elb"
+}
+
 ####################################
 # Local variables                  #
 ####################################
