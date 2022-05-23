@@ -6,8 +6,8 @@ resource "aws_route53_record" "ecs_cluster_record" {
   type    = "A"
 
   alias {
-    name                   = data.terraform_remote_state.vpc.outputs.ecs-cluster-lb-domain
-    zone_id                = data.terraform_remote_state.vpc.outputs.ecs-cluster-lb-zoneId
+    name                   = data.terraform_remote_state.ecs_cluster.outputs.ecs-cluster-lb-domain
+    zone_id                = data.terraform_remote_state.ecs_cluster.outputs.ecs-cluster-lb-zoneId
     evaluate_target_health = false
   }
 }
