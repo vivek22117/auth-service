@@ -95,7 +95,7 @@ public class AuthService {
         mailService.sendMail(new NotificationEmail("Please Activate Your Account!",
                 profile.getEmail(), "Thank you for signing up to DoubleDigit Cloud-Solutions," +
                 " please click on the below link to activate your account :" +
-                "http://localhost:9004/api/auth/accountVerification/" + token));
+                "http://auth-api.cloud-interview.in/api/auth/accountVerification/" + token));
     }
 
     private Set<PermissionSets> addPermissions(Login login, Profile profile) {

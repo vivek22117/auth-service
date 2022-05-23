@@ -14,3 +14,6 @@ output "db_reader_endpoint" {
   value = aws_rds_cluster.auth_service_db[*].port
 }
 
+output "sns_topic_arn" {
+  value = aws_sns_topic.user_registration_topic.arn
+}
