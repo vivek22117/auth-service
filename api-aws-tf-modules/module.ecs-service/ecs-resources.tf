@@ -32,13 +32,13 @@ resource "aws_ecs_service" "auth_api_ecs_service" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.auth_service_ecs_alb_tg.arn
-    container_name   = "auth-api"
+    container_name   = "auth-service"
     container_port   = 9004
   }
 
   service_registries {
     registry_arn   = aws_service_discovery_service.auth_api_sd.arn
-    container_name = "auth-api"
+    container_name = "auth-service"
     container_port = 9004
   }
 }
