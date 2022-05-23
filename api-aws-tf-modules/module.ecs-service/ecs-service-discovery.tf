@@ -6,7 +6,7 @@ locals {
 }
 
 resource "aws_service_discovery_private_dns_namespace" "auth_api_pvt_dns_ns" {
-  name        = "doubledigit-service"
+  name        = "doubledigit-auth-service"
   description = "Domain for all the services"
   vpc         = data.terraform_remote_state.vpc.outputs.vpc_id
 }
