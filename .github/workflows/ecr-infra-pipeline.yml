@@ -17,14 +17,14 @@ on:
 
 env:
   tf_version: '0.13.5'
-  tf_working_dir_app: './deployment/ecr-resources/'
+  tf_working_dir_app: './api-aws-tf-modules-deployment/ecr-resources/'
   maven_dir: './auth-api/'
   aws_region: 'us-east-1'
   environment: ${{ github.event.inputs.env }}
 
 jobs:
   terraform:
-    name: 'Auth-Server-ECR-Repo-Deployment-Pipeline-${{ github.event.inputs.action }}'
+    name: 'Auth-Server-ECR-Repo-Pipeline-${{ github.event.inputs.action }}'
     runs-on: ubuntu-latest
 
     defaults:
