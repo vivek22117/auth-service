@@ -39,7 +39,7 @@ data "template_file" "ecs_task_policy_template" {
   template = file("${path.module}/policy-doc/ecs-task-policy.json")
 }
 
-data "template_file" "config_server_task" {
+data "template_file" "auth_service_task" {
   template = file("${path.module}/tasks/auth-service-api-task.json")
 
   vars = {
