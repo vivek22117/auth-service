@@ -31,4 +31,5 @@ module "auth_api_db_impl" {
   scaling_auto_pause           = var.scaling_auto_pause
   skip_final_snapshot          = var.skip_final_snapshot
   sub_group_name               = var.sub_group_name
+  sns_email_list               = var.sns_email_list
 }
