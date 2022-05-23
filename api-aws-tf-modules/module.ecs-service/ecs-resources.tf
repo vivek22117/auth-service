@@ -18,8 +18,8 @@ resource "aws_ecs_service" "auth_api_ecs_service" {
     aws_iam_role.ecs_task_execution_role
   ]
 
-  name                = var.component_name
-  iam_role            = aws_iam_role.ecs_service_role.name
+  name = var.component_name
+  //  iam_role            = aws_iam_role.ecs_service_role.name
   cluster             = data.terraform_remote_state.ecs_cluster.outputs.ecs-cluster-id
   task_definition     = aws_ecs_task_definition.auth_api_task_def.arn
   desired_count       = var.service_desired_count
