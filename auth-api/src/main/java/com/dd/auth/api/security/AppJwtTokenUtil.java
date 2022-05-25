@@ -1,6 +1,7 @@
 package com.dd.auth.api.security;
 
 import com.dd.auth.api.exception.ApplicationException;
+import com.dd.auth.api.model.dto.AuthKeyResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -73,5 +74,9 @@ public class AppJwtTokenUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
                 .signWith(keyPair.getPrivate())
                 .compact();
+    }
+
+    public AuthKeyResponse getPublicKey() {
+        return AuthKeyResponse.builder().publicKey(keyPair.getPublic()).build();
     }
 }

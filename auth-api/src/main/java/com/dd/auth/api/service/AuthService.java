@@ -6,10 +6,7 @@ import com.dd.auth.api.entity.Profile;
 import com.dd.auth.api.entity.VerificationToken;
 import com.dd.auth.api.exception.ApplicationException;
 import com.dd.auth.api.model.*;
-import com.dd.auth.api.model.dto.AuthenticationResponse;
-import com.dd.auth.api.model.dto.LoginRequest;
-import com.dd.auth.api.model.dto.RefreshTokenRequest;
-import com.dd.auth.api.model.dto.RegisterRequest;
+import com.dd.auth.api.model.dto.*;
 import com.dd.auth.api.repository.LoginRepository;
 import com.dd.auth.api.repository.PermissionSetsRepository;
 import com.dd.auth.api.repository.ProfileRepository;
@@ -175,6 +172,10 @@ public class AuthService {
     public boolean isLoggedIn() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
+    }
+
+    public AuthKeyResponse getKey() {
+        return jwtTokenUtil.getPublicKey();
     }
 
     private String generateVerificationToken(Profile profile) {

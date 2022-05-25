@@ -1,9 +1,6 @@
 package com.dd.auth.api.controller;
 
-import com.dd.auth.api.model.dto.AuthenticationResponse;
-import com.dd.auth.api.model.dto.LoginRequest;
-import com.dd.auth.api.model.dto.RefreshTokenRequest;
-import com.dd.auth.api.model.dto.RegisterRequest;
+import com.dd.auth.api.model.dto.*;
 import com.dd.auth.api.service.AuthService;
 import com.dd.auth.api.service.RefreshTokenService;
 import io.micrometer.core.annotation.Timed;
@@ -63,5 +60,10 @@ public class AuthController {
     public ResponseEntity<String> logout(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
         refreshTokenService.deleteRefreshToken(refreshTokenRequest.getRefreshToken());
         return ResponseEntity.status(HttpStatus.OK).body("Refresh token deleted successfully!");
+    }
+
+    @GetMapping(AUTH_PUBLIC_KEY_URI)
+    public AuthKeyResponse getPublicKey() {
+        return authService.getKey();
     }
 }
