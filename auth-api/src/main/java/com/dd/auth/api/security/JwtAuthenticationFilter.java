@@ -4,6 +4,7 @@ import com.dd.auth.api.service.ProfileUserDetailService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -40,14 +41,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String jwtFromRequest = getJwtFromRequest(request);
 
         if (StringUtils.hasText(jwtFromRequest) && jwtTokenUtil.validateToken(jwtFromRequest)) {
-            String username = jwtTokenUtil.getUsernameFromToken(jwtFromRequest);
 
-            UserDetails userDetails = profileDetailService.loadUserByUsername(username);
-            UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            try {
 
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                String username = jwtTokenUtil.getUsernameFromToken(jwtFromRequest);
+
+                UserDetails userDetails = profileDetailService.loadUserByUsername(username);
+                UsernamePasswordAuthenticationToken authenticationToken =
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            } catch (RuntimeException ex) {
+                SecurityContextHolder.clearContext();
+                throw ex;
+            }
         }
         filterChain.doFilter(request, response);
     }
