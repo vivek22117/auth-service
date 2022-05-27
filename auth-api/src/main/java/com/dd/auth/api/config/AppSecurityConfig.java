@@ -15,10 +15,13 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.servlet.http.HttpServletResponse;
 
 
 @Configuration
@@ -58,12 +61,22 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.cors().and().csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/api/auth/**")
-                .permitAll()
-                .antMatchers(HttpMethod.GET, "/api/**")
-                .permitAll()
+        // Enable CORS and disable CSRF
+        httpSecurity.cors().and().csrf().disable();
+
+        // Set session management to stateless
+        httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and();
+
+        // Set unauthorized requests exception handler
+        httpSecurity.exceptionHandling().authenticationEntryPoint((request, response, ex) -> {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
+        }).and();
+
+        // Set permissions on endpoints
+        httpSecurity.authorizeRequests()
+                .antMatchers(HttpMethod.GET, "/api/auth/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
                 .antMatchers("/internal/**",
                         "/h2-console/**",
                         "/v2/api-docs",
@@ -79,7 +92,10 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/votes**").hasAuthority("ADMIN READ")
                 .anyRequest()
                 .authenticated();
+
         httpSecurity.headers().frameOptions().disable();
+
+        // Add JWT token filter
         httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
