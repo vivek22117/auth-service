@@ -5,6 +5,7 @@ import com.dd.auth.api.entity.PermissionSets;
 import com.dd.auth.api.entity.Profile;
 import com.dd.auth.api.entity.VerificationToken;
 import com.dd.auth.api.exception.ApplicationException;
+import com.dd.auth.api.exception.UserAuthenticationException;
 import com.dd.auth.api.model.*;
 import com.dd.auth.api.model.dto.*;
 import com.dd.auth.api.repository.LoginRepository;
@@ -12,10 +13,15 @@ import com.dd.auth.api.repository.PermissionSetsRepository;
 import com.dd.auth.api.repository.ProfileRepository;
 import com.dd.auth.api.repository.VerificationRepository;
 import com.dd.auth.api.security.AppJwtTokenUtil;
+import com.dd.auth.api.util.JsonUtility;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -54,6 +60,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AppJwtTokenUtil jwtTokenUtil;
     private final SNSMailService mailService;
+    private final JsonUtility jsonUtility;
 
     @Transactional(readOnly = true)
     public Profile getCurrentUser() {
@@ -89,10 +96,11 @@ public class AuthService {
         addPermissions(login, profile);
 
         String token = generateVerificationToken(profile);
-        mailService.sendMail(new NotificationEmail("Please Activate Your Account!",
-                profile.getEmail(), "Thank you for signing up to DoubleDigit Cloud-Solutions," +
-                " please click on the below link to activate your account :" +
-                "http://auth-api.cloud-interview.in/api/auth/accountVerification/" + token));
+        LOGGER.info("http://localhost:9004/api/auth/accountVerification/" + token);
+//        mailService.sendMail(new NotificationEmail("Please Activate Your Account!",
+//                profile.getEmail(), "Thank you for signing up to DoubleDigit Cloud-Solutions," +
+//                " please click on the below link to activate your account :" +
+//                "http://auth-api.cloud-interview.in/api/auth/accountVerification/" + token));
     }
 
     private Set<PermissionSets> addPermissions(Login login, Profile profile) {
@@ -129,17 +137,22 @@ public class AuthService {
                 });
 
         if (profile.getApproved()) {
-            Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                    loginRequest.getUsername(), loginRequest.getPassword()));
-            SecurityContextHolder.getContext().setAuthentication(authenticate);
-            String token = jwtTokenUtil.generateToken(authenticate);
+            try {
 
-            return AuthenticationResponse.builder()
-                    .authenticationToken(token)
-                    .username(loginRequest.getUsername())
-                    .refreshToken(refreshTokenService.generateRefreshToken().getToken())
-                    .expiresAt(Instant.now().plusMillis(JWT_TOKEN_VALIDITY * 1000))
-                    .build();
+                Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsername(), loginRequest.getPassword()));
+                SecurityContextHolder.getContext().setAuthentication(authenticate);
+                String token = jwtTokenUtil.generateToken(authenticate);
+
+                return AuthenticationResponse.builder()
+                        .authenticationToken(token)
+                        .username(loginRequest.getUsername())
+                        .refreshToken(refreshTokenService.generateRefreshToken().getToken())
+                        .expiresAt(Instant.now().plusMillis(JWT_TOKEN_VALIDITY * 1000))
+                        .build();
+            } catch (BadCredentialsException ex) {
+                throw new UserAuthenticationException(ex.getMessage());
+            }
         } else {
             throw new ApplicationException("Please verify your account!");
         }
@@ -174,8 +187,12 @@ public class AuthService {
         return !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
     }
 
-    public AuthKeyResponse getKey() {
-        return jwtTokenUtil.getPublicKey();
+    public String getKey() {
+        try {
+            return jsonUtility.convertToString(jwtTokenUtil.getPublicKey());
+        } catch (JsonProcessingException e) {
+            throw new ApplicationException(e.getMessage());
+        }
     }
 
     private String generateVerificationToken(Profile profile) {
