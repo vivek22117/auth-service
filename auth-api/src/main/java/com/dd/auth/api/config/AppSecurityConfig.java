@@ -12,6 +12,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -26,6 +27,11 @@ import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(
+        securedEnabled = true,
+        jsr250Enabled = true,
+        prePostEnabled = true
+)
 @Slf4j
 public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -86,12 +92,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-ui/**",
                         "/webjars/**")
                 .permitAll()
-                .antMatchers("/api/comments**").hasAuthority("ADMIN READ")
-                .antMatchers("/api/ddblog**").hasAuthority("ADMIN READ")
-                .antMatchers("/api/ddblog/post**").hasAuthority("ADMIN READ")
-                .antMatchers("/api/votes**").hasAuthority("ADMIN READ")
-                .anyRequest()
-                .authenticated();
+                .anyRequest().authenticated();
 
         httpSecurity.headers().frameOptions().disable();
 
