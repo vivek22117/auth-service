@@ -17,6 +17,7 @@ public class CognitoAuthService {
 
     @Value(value = "${aws.cognito.userPoolId}")
     private String userPoolId;
+
     @Value(value = "${aws.cognito.clientId}")
     private String clientId;
 
