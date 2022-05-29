@@ -5,6 +5,8 @@ import com.amazonaws.services.cognitoidp.model.*;
 import com.dd.auth.api.cognito.PasswordRequest;
 import com.dd.auth.api.cognito.UserResponse;
 import com.dd.auth.api.model.dto.RegisterRequest;
+import com.dd.auth.api.util.JsonUtility;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -22,10 +24,12 @@ public class CognitoAuthService {
     private String clientId;
 
     private final AWSCognitoIdentityProvider cognitoClient;
+    private final JsonUtility jsonUtility;
 
 
-    public CognitoAuthService(AWSCognitoIdentityProvider cognitoClient) {
+    public CognitoAuthService(AWSCognitoIdentityProvider cognitoClient, JsonUtility jsonUtility) {
         this.cognitoClient = cognitoClient;
+        this.jsonUtility = jsonUtility;
     }
 
     public void cognitoUserSignUp(RegisterRequest request) {
@@ -67,7 +71,7 @@ public class CognitoAuthService {
 
     public void changePassword(PasswordRequest passwordRequest) {
 
-        ChangePasswordRequest changePasswordRequest= new ChangePasswordRequest()
+        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest()
                 .withAccessToken(passwordRequest.getAccessToken())
                 .withPreviousPassword(passwordRequest.getOldPassword())
                 .withProposedPassword(passwordRequest.getPassword());
@@ -75,31 +79,32 @@ public class CognitoAuthService {
         cognitoClient.changePassword(changePasswordRequest);
     }
 
-    public UserResponse getUserInfo(String username) {
-
+    public String getUserInfo(String username) {
         AdminGetUserRequest userRequest = new AdminGetUserRequest()
                 .withUsername(username)
                 .withUserPoolId(userPoolId);
+        try {
+            AdminGetUserResult userResult = cognitoClient.adminGetUser(userRequest);
 
+            UserResponse userResponse = new UserResponse();
+            userResponse.setUsername(userResult.getUsername());
+            userResponse.setUserStatus(userResult.getUserStatus());
+            userResponse.setUserCreateDate(userResult.getUserCreateDate());
+            userResponse.setLastModifiedDate(userResult.getUserLastModifiedDate());
 
-        AdminGetUserResult userResult = cognitoClient.adminGetUser(userRequest);
-
-        UserResponse userResponse = new UserResponse();
-        userResponse.setUsername(userResult.getUsername());
-        userResponse.setUserStatus(userResult.getUserStatus());
-        userResponse.setUserCreateDate(userResult.getUserCreateDate());
-        userResponse.setLastModifiedDate(userResult.getUserLastModifiedDate());
-
-        List<AttributeType> userAttributes = userResult.getUserAttributes();
-        for(AttributeType attribute: userAttributes) {
-            if(attribute.getName().equals("custom:scope")) {
-                userResponse.setUserScope(attribute.getValue());
-            } else if(attribute.getName().equals("email")) {
-                userResponse.setEmail(attribute.getValue());
+            List<AttributeType> userAttributes = userResult.getUserAttributes();
+            for (AttributeType attribute : userAttributes) {
+                if (attribute.getName().equals("custom:scope")) {
+                    userResponse.setUserScope(attribute.getValue());
+                } else if (attribute.getName().equals("email")) {
+                    userResponse.setEmail(attribute.getValue());
+                }
             }
-        }
-        return userResponse;
 
+            return jsonUtility.convertToString(userResponse);
+        } catch (JsonProcessingException ex) {
+            throw new UserNotFoundException("User info not found! Exception:- " + ex.getMessage());
+        }
     }
 
     private Collection<AttributeType> mapUserAttributes(RegisterRequest request) {
