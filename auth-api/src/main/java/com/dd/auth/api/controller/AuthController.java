@@ -1,8 +1,13 @@
 package com.dd.auth.api.controller;
 
+import com.dd.auth.api.cognito.PasswordRequest;
+import com.dd.auth.api.cognito.UserResponse;
 import com.dd.auth.api.model.dto.*;
 import com.dd.auth.api.service.AuthService;
+import com.dd.auth.api.service.CognitoAuthService;
 import com.dd.auth.api.service.RefreshTokenService;
+import com.dd.auth.api.util.JsonUtility;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.micrometer.core.annotation.Timed;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,19 +29,23 @@ public class AuthController {
 
     private final AuthService authService;
     private final RefreshTokenService refreshTokenService;
+    private final CognitoAuthService cognitoAuthService;
 
 
     @Autowired
-    public AuthController(AuthService authService, RefreshTokenService refreshTokenService) {
+    public AuthController(AuthService authService, RefreshTokenService refreshTokenService,
+                          CognitoAuthService cognitoAuthService) {
         this.authService = authService;
         this.refreshTokenService = refreshTokenService;
+        this.cognitoAuthService = cognitoAuthService;
     }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping(AUTH_SIGNUP_URI)
     @Timed(value = "auth.signup", description = "Time taken to signUp")
     public ResponseEntity<String> signUp(@RequestBody RegisterRequest request) {
-        authService.signup(request);
+        // authService.signup(request);
+        cognitoAuthService.cognitoUserSignUp(request);
         return new ResponseEntity<>("User Registration Successful!", HttpStatus.OK);
     }
 
@@ -62,8 +71,20 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body("Refresh token deleted successfully!");
     }
 
+    @PostMapping(AUTH_CHANGE_PASSWORD_URI)
+    public ResponseEntity<String> changePassword(@Valid @RequestBody PasswordRequest passwordRequest) {
+        cognitoAuthService.changePassword(passwordRequest);
+        return ResponseEntity.status(HttpStatus.OK).body("Password changed successfully!");
+    }
+
+    @GetMapping(AUTH_CHANGE_PASSWORD_URI)
+    public ResponseEntity<String> getUserInfo(@PathVariable String username) throws JsonProcessingException {
+        String userInfo = cognitoAuthService.getUserInfo(username);
+        return ResponseEntity.status(HttpStatus.OK).body(userInfo);
+    }
+
     @GetMapping(AUTH_PUBLIC_KEY_URI)
-    public AuthKeyResponse getPublicKey() {
-        return authService.getKey();
+    public ResponseEntity<String> getPublicKey() {
+        return ResponseEntity.status(HttpStatus.OK).body(authService.getKey());
     }
 }
