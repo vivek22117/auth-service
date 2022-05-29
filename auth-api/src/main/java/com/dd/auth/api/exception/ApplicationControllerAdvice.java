@@ -3,7 +3,6 @@ package com.dd.auth.api.exception;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpHeaders;
@@ -14,7 +13,6 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -58,7 +56,7 @@ public class ApplicationControllerAdvice extends ResponseEntityExceptionHandler 
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleNotFoundException(HttpServletRequest request,
-                                                                        NotFoundException ex) {
+                                                          NotFoundException ex) {
         logger.error("NotFoundException {}\n", request.getRequestURI(), ex);
 
         return ResponseEntity
