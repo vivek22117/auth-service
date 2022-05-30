@@ -15,7 +15,9 @@ import java.time.Instant;
 @ApiModel
 public class AuthenticationResponse {
     private String authenticationToken;
+    private String idToken;
     private String refreshToken;
+    private String tokenType;
     private Instant expiresAt;
     private String username;
 }
