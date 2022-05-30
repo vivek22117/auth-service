@@ -10,6 +10,11 @@ spring:
     config:
       uri: http://config-server.cloud-interview.in/
       label: develop
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_mLMX4T314
 
 management:
   endpoint:
