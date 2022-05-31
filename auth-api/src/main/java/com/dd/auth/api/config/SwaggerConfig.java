@@ -1,41 +1,51 @@
 package com.dd.auth.api.config;
 
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.data.rest.configuration.SpringDataRestConfiguration;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
-@EnableSwagger2
-@Import(SpringDataRestConfiguration.class)
 public class SwaggerConfig {
 
     @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.dd.auth.api"))
-                .paths(PathSelectors.ant("/api/auth/**"))
+    public GroupedOpenApi apiGroup() {
+        return GroupedOpenApi
+                .builder()
+                .group("Api")
+                .pathsToMatch("/api/**")
                 .build();
     }
 
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("Auth API Service")
-                .version("v1")
-                .description("This page documents the Authentication APIs version v1")
-                .contact(new Contact("Vivek Mishra", "N/A", "vivekkmishra2020@gmail.com"))
-                .license("Apache License Version 2.0")
-                .build();
+    @Bean
+    public OpenAPI apiInfo() {
+        final String securitySchemeName = "bearerAuth";
 
+        Contact contact = new Contact();
+        contact.setEmail("admin@doubledigit-solutions.com");
+        contact.setName("Vivek Mishra");
+
+        return new OpenAPI()
+                .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
+                .components(
+                        new Components()
+                                .addSecuritySchemes(securitySchemeName,
+                                        new SecurityScheme()
+                                                .name(securitySchemeName)
+                                                .type(SecurityScheme.Type.HTTP)
+                                                .scheme("bearer")
+                                                .bearerFormat("JWT")))
+                .info(
+                        new Info()
+                                .title("Auth API Service")
+                                .contact(contact)
+                                .description("This page documents the Authentication APIs version v1")
+                                .version("v1"));
     }
+
 }
