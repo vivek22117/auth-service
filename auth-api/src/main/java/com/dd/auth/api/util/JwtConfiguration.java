@@ -19,6 +19,7 @@ public class JwtConfiguration {
     @Value("${awsRegion: No value}")
     private String region;
 
+    private String userNameField = "cognito:username";
     private final int connectionTimeout = 2000;
     private final int readTimeout = 2000;
     private final String httpHeader = "Authorization";
