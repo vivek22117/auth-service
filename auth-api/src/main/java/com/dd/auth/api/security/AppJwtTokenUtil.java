@@ -1,7 +1,11 @@
 package com.dd.auth.api.security;
 
 import com.dd.auth.api.exception.ApplicationException;
-import com.dd.auth.api.model.dto.AuthKeyResponse;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.KeyUse;
+import com.nimbusds.jose.jwk.RSAKey;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -14,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.security.KeyPair;
+import java.security.interfaces.RSAPublicKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -76,7 +81,12 @@ public class AppJwtTokenUtil {
                 .compact();
     }
 
-    public AuthKeyResponse getPublicKey() {
-        return AuthKeyResponse.builder().publicKey(keyPair.getPublic()).build();
+    public JWKSet getPublicKey() throws JOSEException {
+        RSAKey jwkRsaPublicKey = new RSAKey.Builder((RSAPublicKey) keyPair.getPublic())
+                .keyUse(KeyUse.SIGNATURE)
+                .algorithm(JWSAlgorithm.RS256)
+                .build();
+        log.info(String.valueOf(jwkRsaPublicKey.toRSAPublicKey()));
+        return new JWKSet(jwkRsaPublicKey);
     }
 }
