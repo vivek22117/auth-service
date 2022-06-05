@@ -5,18 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
@@ -25,7 +21,7 @@ import java.security.InvalidParameterException;
 import java.util.*;
 
 @RestControllerAdvice
-public class ApplicationControllerAdvice extends ResponseEntityExceptionHandler {
+public class ApplicationControllerAdvice {
 
     private final Logger logger = LogManager.getLogger(ApplicationControllerAdvice.class);
 
@@ -63,14 +59,6 @@ public class ApplicationControllerAdvice extends ResponseEntityExceptionHandler 
                 .status(HttpStatus.NOT_FOUND)
                 .body(new ApiCallError<>("Not found exception", Collections.singletonList(ex.getMessage())));
     }
-
-    @Override
-    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
-                                                                         HttpHeaders headers, HttpStatus status,
-                                                                         WebRequest request) {
-        return new ResponseEntity<>("Please provide valid http method type!", HttpStatus.METHOD_NOT_ALLOWED);
-    }
-
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ApiCallError<String>> handleValidationException(HttpServletRequest request,
