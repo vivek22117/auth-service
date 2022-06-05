@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.util.Map;
+
 import static com.dd.auth.api.util.AppUtility.*;
 
 
@@ -77,14 +79,8 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body("Password changed successfully!");
     }
 
-    @GetMapping(AUTH_CHANGE_PASSWORD_URI)
-    public ResponseEntity<String> getUserInfo(@PathVariable String username) throws JsonProcessingException {
-        String userInfo = cognitoAuthService.getUserInfo(username);
-        return ResponseEntity.status(HttpStatus.OK).body(userInfo);
-    }
-
     @GetMapping(AUTH_PUBLIC_KEY_URI)
-    public ResponseEntity<String> getPublicKey() {
-        return ResponseEntity.status(HttpStatus.OK).body(authService.getKey());
+    public ResponseEntity<Map<String, Object>> getPublicKey() {
+        return ResponseEntity.status(HttpStatus.OK).body(authService.getKey().toJSONObject());
     }
 }
