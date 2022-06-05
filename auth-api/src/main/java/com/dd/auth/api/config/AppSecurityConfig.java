@@ -85,7 +85,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
                 .antMatchers("/internal/**",
                         "/h2-console/**",
-                        "/v2/api-docs",
+                        "/api-docs/**",
                         "/configuration/ui",
                         "/swagger-resources/**",
                         "/configuration/security",
