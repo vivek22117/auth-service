@@ -27,7 +27,7 @@ import java.util.*;
 @RestControllerAdvice
 public class ApplicationControllerAdvice extends ResponseEntityExceptionHandler {
 
-    private final Logger logger = LogManager.getLogger();
+    private final Logger logger = LogManager.getLogger(ApplicationControllerAdvice.class);
 
     @ExceptionHandler({ConstraintViolationException.class})
     public ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex) {
