@@ -46,8 +46,8 @@ public class AuthController {
     @PostMapping(AUTH_SIGNUP_URI)
     @Timed(value = "auth.signup", description = "Time taken to signUp")
     public ResponseEntity<String> signUp(@RequestBody RegisterRequest request) {
-        // authService.signup(request);
-        cognitoAuthService.cognitoUserSignUp(request);
+         authService.signup(request);
+//        cognitoAuthService.cognitoUserSignUp(request);
         return new ResponseEntity<>("User Registration Successful!", HttpStatus.OK);
     }
 
