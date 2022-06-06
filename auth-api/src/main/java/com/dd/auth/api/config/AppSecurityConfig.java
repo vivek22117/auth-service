@@ -81,8 +81,8 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // Set permissions on endpoints
         httpSecurity.authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/api/auth/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/public/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/public/**").permitAll()
                 .antMatchers("/internal/**",
                         "/h2-console/**",
                         "/api-docs/**",
