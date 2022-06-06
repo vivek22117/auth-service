@@ -22,6 +22,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.dd.auth.api.util.AppUtility.JWT_TOKEN_VALIDITY;
 
@@ -84,7 +85,6 @@ public class AppJwtTokenUtil {
     public JWKSet getPublicKey() throws JOSEException {
         RSAKey jwkRsaPublicKey = new RSAKey.Builder((RSAPublicKey) keyPair.getPublic())
                 .keyUse(KeyUse.SIGNATURE)
-                .algorithm(JWSAlgorithm.RS256)
                 .build();
         log.info(String.valueOf(jwkRsaPublicKey.toRSAPublicKey()));
         return new JWKSet(jwkRsaPublicKey);
