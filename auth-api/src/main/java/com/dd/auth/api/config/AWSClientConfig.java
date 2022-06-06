@@ -11,6 +11,8 @@ import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import com.dd.auth.api.util.JwtConfiguration;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.jwk.source.RemoteJWKSet;
@@ -45,9 +47,6 @@ public class AWSClientConfig {
 
     @Value("${awsRegion: No value}")
     private String region;
-
-    @Value(value = "${aws.cognito.userPoolId}")
-    private String userPoolId;
 
     public AWSClientConfig(JwtConfiguration jwtConfiguration) {
         this.jwtConfiguration = jwtConfiguration;
@@ -85,19 +84,13 @@ public class AWSClientConfig {
 
     @Bean
     public ObjectMapper getObjectMapper() {
-        return ((new ObjectMapper()).configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false));
-    }
+        ObjectMapper mapper = new ObjectMapper();
 
-    @Bean
-    public ConfigurableJWTProcessor configurableJWTProcessor() throws MalformedURLException {
-        ResourceRetriever resourceRetriever = new DefaultResourceRetriever(jwtConfiguration.getConnectionTimeout(),
-                jwtConfiguration.getReadTimeout());
-        URL jwkSetURL = new URL(jwtConfiguration.getJwkUrl());
-        JWKSource keySource = new RemoteJWKSet<>(jwkSetURL, resourceRetriever);
-        ConfigurableJWTProcessor jwtProcessor = new DefaultJWTProcessor<>();
-        JWSKeySelector keySelector = new JWSVerificationKeySelector(JWSAlgorithm.RS256, keySource);
-        jwtProcessor.setJWSKeySelector(keySelector);
-        return jwtProcessor;
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        return mapper;
     }
 
     private AWSCredentialsProvider getAWSCredentialProvider() {
