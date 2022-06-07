@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -15,7 +17,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 import java.security.InvalidParameterException;
 import java.util.*;
@@ -25,29 +26,38 @@ public class ApplicationControllerAdvice {
 
     private final Logger logger = LogManager.getLogger(ApplicationControllerAdvice.class);
 
-    @ExceptionHandler({ConstraintViolationException.class})
-    public ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex) {
-        return new ResponseEntity<>(ex.getConstraintViolations()
-                .stream().findFirst()
-                .get()
-                .getMessage(), HttpStatus.BAD_REQUEST);
+    @ExceptionHandler({DataIntegrityViolationException.class})
+    public ResponseEntity<Object> handleConstraintViolation(HttpServletRequest request, DataIntegrityViolationException ex) {
+        logger.error("SQL query data violation, pleas re-check{}\n", request.getRequestURI(), ex);
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ApiCallError<>("SQL query data violation exception", Collections.singletonList(ex.getMessage())));
     }
 
     @ExceptionHandler(InvalidParameterException.class)
-    public ResponseEntity<Object> invalidRegistrationInput(InvalidParameterException invalidParameterException) {
-        logger.error("Invalid registration parameters, pleas re-check");
-        return new ResponseEntity<>(invalidParameterException.getMessage(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Object> invalidRegistrationInput(HttpServletRequest request, InvalidParameterException ex) {
+        logger.error("Invalid registration parameters, pleas re-check{}\n", request.getRequestURI(), ex);
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ApiCallError<>("Invalid registration parameters exception", Collections.singletonList(ex.getMessage())));
     }
 
     @ExceptionHandler(UserAuthenticationException.class)
-    public ResponseEntity<Object> handleAuthenticationError(UserAuthenticationException authenticationException) {
-        logger.error("Login authentication failed, please recheck credentials");
-        return new ResponseEntity<>(authenticationException.getMessage(), HttpStatus.FORBIDDEN);
+    public ResponseEntity<Object> handleAuthenticationError(HttpServletRequest request, UserAuthenticationException ex) {
+        logger.error("Login authentication failed, please recheck credentials {}\n", request.getRequestURI(), ex);
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(new ApiCallError<>("Login authentication failed exception", Collections.singletonList(ex.getMessage())));
     }
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<Object> handleBusinessException(BusinessException exception) {
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NO_CONTENT);
+    public ResponseEntity<Object> handleBusinessException(HttpServletRequest request, BusinessException ex) {
+        logger.error("No content {}\n", request.getRequestURI(), ex);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .body(new ApiCallError<>("No content exception", Collections.singletonList(ex.getMessage())));
     }
 
     @ExceptionHandler(NotFoundException.class)
@@ -125,6 +135,15 @@ public class ApplicationControllerAdvice {
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
                 .body(new ApiCallError<>("Access denied!", Collections.singletonList(ex.getMessage())));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiCallError<String>> sqlException(HttpServletRequest request, Exception ex) {
+        logger.error("SQL query exception {}\n", request.getRequestURI(), ex);
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ApiCallError<>("Internal server error", Collections.singletonList(ex.getMessage())));
     }
 
     @ExceptionHandler(Exception.class)
