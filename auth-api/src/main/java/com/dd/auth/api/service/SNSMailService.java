@@ -17,12 +17,10 @@ public class SNSMailService {
     private static final Logger LOGGER = getLogger(SNSMailService.class);
 
     private final AWSUtil awsUtil;
-    private final MailContentBuilder contentBuilder;
 
     @Autowired
-    public SNSMailService(AWSUtil awsUtil, MailContentBuilder contentBuilder) {
+    public SNSMailService(AWSUtil awsUtil) {
         this.awsUtil = awsUtil;
-        this.contentBuilder = contentBuilder;
     }
 
     void sendMail(NotificationEmail notificationEmail) {
@@ -31,7 +29,7 @@ public class SNSMailService {
         snsMessage.put("From", "vivek.mishra@doubledigit-solutions.com");
         snsMessage.put("To", notificationEmail.getRecipient());
         snsMessage.put("Subject", notificationEmail.getSubject());
-        snsMessage.put("Text", contentBuilder.build(notificationEmail.getBody()));
+        snsMessage.put("Text", notificationEmail.getBody());
 
         try {
             awsUtil.publish(snsMessage);
