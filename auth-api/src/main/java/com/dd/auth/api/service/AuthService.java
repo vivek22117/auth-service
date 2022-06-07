@@ -6,19 +6,20 @@ import com.dd.auth.api.entity.Profile;
 import com.dd.auth.api.entity.VerificationToken;
 import com.dd.auth.api.exception.ApplicationException;
 import com.dd.auth.api.exception.UserAuthenticationException;
-import com.dd.auth.api.model.*;
-import com.dd.auth.api.model.dto.*;
+import com.dd.auth.api.model.dto.AuthenticationResponse;
+import com.dd.auth.api.model.dto.LoginRequest;
+import com.dd.auth.api.model.dto.RefreshTokenRequest;
+import com.dd.auth.api.model.dto.RegisterRequest;
 import com.dd.auth.api.repository.LoginRepository;
 import com.dd.auth.api.repository.PermissionSetsRepository;
 import com.dd.auth.api.repository.ProfileRepository;
 import com.dd.auth.api.repository.VerificationRepository;
 import com.dd.auth.api.security.AppJwtTokenUtil;
 import com.dd.auth.api.util.JsonUtility;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.jwk.JWKSet;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -187,11 +188,11 @@ public class AuthService {
         return !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
     }
 
-    public String getKey() {
+    public JWKSet getKey() {
         try {
-            return jsonUtility.convertToString(jwtTokenUtil.getPublicKey());
-        } catch (JsonProcessingException e) {
-            throw new ApplicationException(e.getMessage());
+            return jwtTokenUtil.getPublicKey();
+        } catch (JOSEException joseException) {
+            throw new ApplicationException(joseException.getMessage());
         }
     }
 
