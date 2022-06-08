@@ -1,5 +1,6 @@
 package com.dd.auth.api.config;
 
+import com.dd.auth.api.exception.RestAuthenticationEntryPoint;
 import com.dd.auth.api.security.JwtAuthenticationFilter;
 import io.micrometer.core.aop.TimedAspect;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -21,8 +22,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import javax.servlet.http.HttpServletResponse;
 
 
 @Configuration
@@ -65,6 +64,11 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    @Bean
+    RestAuthenticationEntryPoint authenticationEntryPoint() {
+        return new RestAuthenticationEntryPoint();
+    }
+
     @Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
         // Enable CORS and disable CSRF
@@ -75,9 +79,8 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and();
 
         // Set unauthorized requests exception handler
-        httpSecurity.exceptionHandling().authenticationEntryPoint((request, response, ex) -> {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
-        }).and();
+        httpSecurity.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
+                .and();
 
         // Set permissions on endpoints
         httpSecurity.authorizeRequests()
