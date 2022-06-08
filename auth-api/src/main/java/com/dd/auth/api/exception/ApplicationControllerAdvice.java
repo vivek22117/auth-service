@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -135,15 +134,6 @@ public class ApplicationControllerAdvice {
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
                 .body(new ApiCallError<>("Access denied!", Collections.singletonList(ex.getMessage())));
-    }
-
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ApiCallError<String>> sqlException(HttpServletRequest request, Exception ex) {
-        logger.error("SQL query exception {}\n", request.getRequestURI(), ex);
-
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ApiCallError<>("Internal server error", Collections.singletonList(ex.getMessage())));
     }
 
     @ExceptionHandler(Exception.class)
