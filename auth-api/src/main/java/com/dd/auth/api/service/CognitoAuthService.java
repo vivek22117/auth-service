@@ -72,7 +72,7 @@ public class CognitoAuthService {
     public void changePassword(PasswordRequest passwordRequest) {
 
         ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest()
-                .withAccessToken(passwordRequest.getAccessToken())
+                .withAccessToken(passwordRequest.getUsername())
                 .withPreviousPassword(passwordRequest.getOldPassword())
                 .withProposedPassword(passwordRequest.getPassword());
 
