@@ -2,7 +2,6 @@ package com.dd.auth.api.security;
 
 import com.dd.auth.api.exception.ApplicationException;
 import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.KeyUse;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -11,7 +10,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
@@ -22,7 +20,6 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import static com.dd.auth.api.util.AppUtility.JWT_TOKEN_VALIDITY;
 
@@ -31,9 +28,6 @@ import static com.dd.auth.api.util.AppUtility.JWT_TOKEN_VALIDITY;
 public class AppJwtTokenUtil {
 
     private KeyPair keyPair;
-
-    @Value("$secret.key}")
-    private String secret;
 
     @PostConstruct
     public void init() {
