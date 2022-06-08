@@ -9,7 +9,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -19,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static org.slf4j.LoggerFactory.getLogger;
+import static org.springframework.util.StringUtils.hasText;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -40,22 +40,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String jwtFromRequest = getJwtFromRequest(request);
 
-        if (StringUtils.hasText(jwtFromRequest) && jwtTokenUtil.validateToken(jwtFromRequest)) {
+        if (!hasText(jwtFromRequest) || !jwtTokenUtil.validateToken(jwtFromRequest)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-            try {
+        try {
 
-                String username = jwtTokenUtil.getUsernameFromToken(jwtFromRequest);
+            String username = jwtTokenUtil.getUsernameFromToken(jwtFromRequest);
 
-                UserDetails userDetails = profileDetailService.loadUserByUsername(username);
-                UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            UserDetails userDetails = profileDetailService.loadUserByUsername(username);
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            } catch (RuntimeException ex) {
-                SecurityContextHolder.clearContext();
-                throw ex;
-            }
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        } catch (RuntimeException ex) {
+            SecurityContextHolder.clearContext();
+            throw ex;
         }
         filterChain.doFilter(request, response);
     }
@@ -63,7 +65,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private String getJwtFromRequest(HttpServletRequest request) {
         final String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+        if (hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
         LOGGER.info("BEARER..." + bearerToken);
