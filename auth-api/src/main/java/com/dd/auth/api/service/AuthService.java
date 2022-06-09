@@ -75,14 +75,15 @@ public class AuthService {
     public void signup(RegisterRequest request) {
         Profile profile = new Profile();
 
-        profile.setName(request.getName());
+        profile.setFirstName(request.getFirstName());
+        profile.setLastName(request.getLastName());
         profile.setMobile(request.getMobile());
         profile.setAddress(request.getAddress());
         profile.setUsername(request.getUsername());
         profile.setEmail(request.getEmail());
         profile.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        profile.setCreated(Instant.now());
+        profile.setCreatedOn(Instant.now());
         profile.setApproved(false);
         profileRepository.save(profile);
 
@@ -122,10 +123,10 @@ public class AuthService {
     }
 
     public void verityToken(String token) {
-        Optional<VerificationToken> verificationToken = verificationRepository.findByToken(token);
-        verificationToken.orElseThrow(() -> new ApplicationException("Invalid Token!"));
+        VerificationToken verificationToken = verificationRepository.findByToken(token)
+                .orElseThrow(() -> new ApplicationException("Invalid Token!"));
 
-        fetchUserAndEnable(verificationToken.get());
+        fetchUserAndEnable(verificationToken);
     }
 
     public AuthenticationResponse login(LoginRequest loginRequest) {
@@ -158,6 +159,8 @@ public class AuthService {
             throw new ApplicationException("Please verify your account!");
         }
     }
+
+
 
     public AuthenticationResponse refreshToken(RefreshTokenRequest request) {
         refreshTokenService.validateRefreshToken(request.getRefreshToken());
