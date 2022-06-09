@@ -5,6 +5,7 @@ public class AppUtility {
     public static final long JWT_TOKEN_VALIDITY = 3600;
 
 
+    public static final String ENDPOINT_URL = "https://auth-api.cloud-interview.in";
     public static final String API_AUTH_ROOT_URI = "/api";
     public static final String AUTH_SIGNUP_URI = "/public/auth/signup";
     public static final String ACCOUNT_VERIFICATION_TOKEN_URI = "/public/auth/accountVerification/{token}";
