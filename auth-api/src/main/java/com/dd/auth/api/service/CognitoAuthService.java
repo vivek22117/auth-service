@@ -110,7 +110,7 @@ public class CognitoAuthService {
     private Collection<AttributeType> mapUserAttributes(RegisterRequest request) {
         return Arrays.asList(
                 new AttributeType().withName("email").withValue(request.getEmail()),
-                new AttributeType().withName("name").withValue(request.getName()),
+                new AttributeType().withName("name").withValue(request.getFirstName()),
                 new AttributeType().withName("phone_number").withValue(request.getMobile()),
                 new AttributeType().withName("address").withValue(request.getAddress()),
                 new AttributeType().withName("custom:scope").withValue("admin")
