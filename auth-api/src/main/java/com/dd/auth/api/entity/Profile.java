@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.time.Instant;
 import java.util.Set;
 
@@ -24,17 +25,24 @@ public class Profile {
     @GeneratedValue(strategy = IDENTITY)
     private Long profileId;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "first_name")
+    @NotEmpty(message = "Please provide your first name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    @NotEmpty(message = "Please provide your last name")
+    private String lastName;
 
     @Column(name = "mobile")
+    @NotEmpty(message = "Please provide your mobile number")
     private String mobile;
 
     @Column(name = "address")
     private String address;
 
     @Column(name = "email", unique = true, nullable = false)
-    @Email
+    @Email(message = "Please provide a valid e-mail")
+    @NotEmpty(message = "Please provide an e-mail")
     private String email;
 
     @Column(name = "username", unique = true, nullable = false)
@@ -48,8 +56,11 @@ public class Profile {
     @Column(name = "approved")
     private Boolean approved;
 
-    @Column(name = "created")
-    private Instant created;
+    @Column(name = "created_on")
+    private Instant createdOn;
+
+    @Column(name = "reset_token")
+    private String resetToken;
 
     @OneToOne(fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
