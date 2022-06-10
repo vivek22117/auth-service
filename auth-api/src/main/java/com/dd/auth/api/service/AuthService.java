@@ -6,6 +6,7 @@ import com.dd.auth.api.entity.Profile;
 import com.dd.auth.api.entity.VerificationToken;
 import com.dd.auth.api.exception.ApplicationException;
 import com.dd.auth.api.exception.UserAuthenticationException;
+import com.dd.auth.api.model.NotificationEmail;
 import com.dd.auth.api.model.dto.AuthenticationResponse;
 import com.dd.auth.api.model.dto.LoginRequest;
 import com.dd.auth.api.model.dto.RefreshTokenRequest;
@@ -35,7 +36,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.LongStream;
@@ -60,7 +60,7 @@ public class AuthService {
     private final LoginRepository loginRepository;
     private final PasswordEncoder passwordEncoder;
     private final AppJwtTokenUtil jwtTokenUtil;
-    private final SNSMailService mailService;
+    private final SESEmailService mailService;
     private final JsonUtility jsonUtility;
 
     @Transactional(readOnly = true)
@@ -99,10 +99,10 @@ public class AuthService {
 
         String token = generateVerificationToken(profile);
         LOGGER.info("http://localhost:9004/api/auth/accountVerification/" + token);
-//        mailService.sendMail(new NotificationEmail("Please Activate Your Account!",
-//                profile.getEmail(), "Thank you for signing up to DoubleDigit Cloud-Solutions," +
-//                " please click on the below link to activate your account :" +
-//                "http://auth-api.cloud-interview.in/api/auth/accountVerification/" + token));
+        mailService.sendEmail(new NotificationEmail("Please Activate Your Account!",
+                profile.getEmail(), "Thank you for signing up to DoubleDigit Cloud-Solutions," +
+                " please click on the below link to activate your account :" +
+                "http://auth-api.cloud-interview.in/api/auth/accountVerification/" + token));
     }
 
     private Set<PermissionSets> addPermissions(Login login, Profile profile) {
@@ -159,7 +159,6 @@ public class AuthService {
             throw new ApplicationException("Please verify your account!");
         }
     }
-
 
 
     public AuthenticationResponse refreshToken(RefreshTokenRequest request) {
