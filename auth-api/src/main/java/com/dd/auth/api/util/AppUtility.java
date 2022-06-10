@@ -12,7 +12,8 @@ public class AppUtility {
     public static final String AUTH_LOGIN_URI = "/public/auth/login";
     public static final String AUTH_REFRESH_TOKEN_URI = "/public/auth/refresh/token";
     public static final String AUTH_LOGOUT_URI = "/auth/logout";
-    public static final String AUTH_CHANGE_PASSWORD_URI = "/auth/changepassword";
+    public static final String AUTH_FORGOT_PASSWORD_URI = "/auth/public/forgot_password";
+    public static final String AUTH_RESET_PASSWORD_URI = "/auth/public/reset_password";
     public static final String AUTH_PUBLIC_KEY_URI = "/auth/.well-know/jwks.json";
 
 }
