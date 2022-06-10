@@ -1,5 +1,6 @@
 package com.dd.auth.api.exception;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,7 +32,7 @@ public class ApplicationControllerAdvice {
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(new ApiCallError<>("SQL query data violation exception", Collections.singletonList(ex.getMessage())));
+                .body(new ApiCallError<>(HttpStatus.BAD_REQUEST, Collections.singletonList(ex.getMessage())));
     }
 
     @ExceptionHandler(InvalidParameterException.class)
@@ -40,7 +41,7 @@ public class ApplicationControllerAdvice {
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(new ApiCallError<>("Invalid registration parameters exception", Collections.singletonList(ex.getMessage())));
+                .body(new ApiCallError<>(HttpStatus.BAD_REQUEST, Collections.singletonList(ex.getMessage())));
     }
 
     @ExceptionHandler(UserAuthenticationException.class)
@@ -48,7 +49,7 @@ public class ApplicationControllerAdvice {
         logger.error("Login authentication failed, please recheck credentials {}\n", request.getRequestURI(), ex);
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
-                .body(new ApiCallError<>("Login authentication failed exception", Collections.singletonList(ex.getMessage())));
+                .body(new ApiCallError<>(HttpStatus.FORBIDDEN, Collections.singletonList(ex.getMessage())));
     }
 
     @ExceptionHandler(BusinessException.class)
@@ -56,7 +57,7 @@ public class ApplicationControllerAdvice {
         logger.error("No content {}\n", request.getRequestURI(), ex);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
-                .body(new ApiCallError<>("No content exception", Collections.singletonList(ex.getMessage())));
+                .body(new ApiCallError<>(HttpStatus.NO_CONTENT, Collections.singletonList(ex.getMessage())));
     }
 
     @ExceptionHandler(NotFoundException.class)
@@ -66,7 +67,7 @@ public class ApplicationControllerAdvice {
 
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(new ApiCallError<>("Not found exception", Collections.singletonList(ex.getMessage())));
+                .body(new ApiCallError<>(HttpStatus.NOT_FOUND, Collections.singletonList(ex.getMessage())));
     }
 
     @ExceptionHandler(ValidationException.class)
@@ -76,7 +77,7 @@ public class ApplicationControllerAdvice {
 
         return ResponseEntity
                 .badRequest()
-                .body(new ApiCallError<>("Validation exception", Collections.singletonList(ex.getMessage())));
+                .body(new ApiCallError<>(HttpStatus.BAD_REQUEST, Collections.singletonList(ex.getMessage())));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
@@ -86,7 +87,7 @@ public class ApplicationControllerAdvice {
 
         return ResponseEntity
                 .badRequest()
-                .body(new ApiCallError<>("Missing request parameter", Collections.singletonList(ex.getMessage())));
+                .body(new ApiCallError<>(HttpStatus.BAD_REQUEST, Collections.singletonList(ex.getMessage())));
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -101,7 +102,7 @@ public class ApplicationControllerAdvice {
 
         return ResponseEntity
                 .badRequest()
-                .body(new ApiCallError<>("Method argument type mismatch", Collections.singletonList(details)));
+                .body(new ApiCallError<>(HttpStatus.BAD_REQUEST, Collections.singletonList(details)));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -123,7 +124,7 @@ public class ApplicationControllerAdvice {
 
         return ResponseEntity
                 .badRequest()
-                .body(new ApiCallError<>("Method argument validation failed", details));
+                .body(new ApiCallError<>(HttpStatus.BAD_REQUEST, details));
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -133,7 +134,7 @@ public class ApplicationControllerAdvice {
 
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
-                .body(new ApiCallError<>("Access denied!", Collections.singletonList(ex.getMessage())));
+                .body(new ApiCallError<>(HttpStatus.FORBIDDEN, Collections.singletonList(ex.getMessage())));
     }
 
     @ExceptionHandler(Exception.class)
@@ -142,16 +143,35 @@ public class ApplicationControllerAdvice {
 
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ApiCallError<>("Internal server error", Collections.singletonList(ex.getMessage())));
+                .body(new ApiCallError<>(HttpStatus.INTERNAL_SERVER_ERROR, Collections.singletonList(ex.getMessage())));
     }
 
     @Data
-    @NoArgsConstructor
     @AllArgsConstructor
     public static class ApiCallError<T> {
 
-        private String message;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+        private Date timestamp;
+
+        private String status;
+        private String stackTrace;
+        private int code;
         private List<T> details;
+
+        public ApiCallError() {
+            timestamp = new Date();
+        }
+
+        public ApiCallError(HttpStatus httpStatus, List<T> data) {
+            this();
+            this.code = httpStatus.value();
+            this.details = data;
+        }
+
+        public ApiCallError(HttpStatus httpStatus, List<T> data, String stackTrace) {
+            this(httpStatus, data);
+            this.stackTrace = stackTrace;
+        }
 
     }
 
