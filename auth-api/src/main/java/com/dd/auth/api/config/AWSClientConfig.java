@@ -4,8 +4,11 @@ import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProviderClientBuilder;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import com.dd.auth.api.util.JwtConfiguration;
@@ -51,8 +54,22 @@ public class AWSClientConfig {
 
         } catch (Exception ex) {
             logger.error("Exception Occurred while creating sns client" + ex.getMessage(), ex);
+            throw ex;
         }
-        return null;
+    }
+
+    @Bean
+    public AmazonSimpleEmailService amazonSimpleEmailService() {
+        try {
+            awsCredentialsProvider = getAWSCredentialProvider();
+            return AmazonSimpleEmailServiceClientBuilder.standard()
+                    .withCredentials(awsCredentialsProvider)
+                    .withRegion(Regions.US_EAST_1)
+                    .build();
+        } catch (Exception ex) {
+            logger.error("Exception Occurred while creating ses client" + ex.getMessage(), ex);
+            throw ex;
+        }
     }
 
     @Bean
