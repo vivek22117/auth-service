@@ -26,11 +26,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(
-        securedEnabled = true,
-        jsr250Enabled = true,
-        prePostEnabled = true
-)
 @Slf4j
 public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -84,8 +79,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // Set permissions on endpoints
         httpSecurity.authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/api/public/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/public/**").permitAll()
+                .antMatchers("/api/public/**").permitAll()
                 .antMatchers("/internal/**",
                         "/h2-console/**",
                         "/api-docs/**",
