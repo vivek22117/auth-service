@@ -39,7 +39,7 @@ public interface ProfileRepository extends CrudRepository<Profile, Long> {
 
     Optional<Profile> findByUsername(String username);
 
-	Optional<Profile> findByEmail(String username);
+	Optional<Profile> findByEmail(String email);
 
 	Optional<Profile> findByResetToken(String resetToken);
 }
