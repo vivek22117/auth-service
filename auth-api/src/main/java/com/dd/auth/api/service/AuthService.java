@@ -16,6 +16,7 @@ import com.dd.auth.api.repository.PermissionSetsRepository;
 import com.dd.auth.api.repository.ProfileRepository;
 import com.dd.auth.api.repository.VerificationRepository;
 import com.dd.auth.api.security.AppJwtTokenUtil;
+import com.dd.auth.api.util.AppUtility;
 import com.dd.auth.api.util.JsonUtility;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -98,11 +99,12 @@ public class AuthService {
         addPermissions(login, profile);
 
         String token = generateVerificationToken(profile);
-        LOGGER.info("http://localhost:9004/api/auth/accountVerification/" + token);
-        mailService.sendEmail(new NotificationEmail("Please Activate Your Account!",
-                profile.getEmail(), "Thank you for signing up to DoubleDigit Cloud-Solutions," +
-                " please click on the below link to activate your account :" +
-                "http://auth-api.cloud-interview.in/api/auth/accountVerification/" + token));
+        LOGGER.info("http://localhost:9004/api/public/auth/accountVerification/" + token);
+        mailService.sendEmail(NotificationEmail.builder()
+                .subject("Account Activation!!")
+                .recipient(profile.getEmail())
+                .body(AppUtility.refreshTokenEmailContent("http://localhost:9004/api/public/auth/accountVerification/"
+                        + token, profile.getFirstName())).build());
     }
 
     private Set<PermissionSets> addPermissions(Login login, Profile profile) {
@@ -141,6 +143,7 @@ public class AuthService {
         if (profile.getApproved()) {
             try {
 
+
                 Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                         loginRequest.getUsername(), loginRequest.getPassword()));
                 SecurityContextHolder.getContext().setAuthentication(authenticate);
@@ -177,7 +180,8 @@ public class AuthService {
                 .orElseThrow(new Supplier<RuntimeException>() {
                     @Override
                     public RuntimeException get() {
-                        return new ApplicationException("No user found with name - " + userEmail);
+                        return new ApplicationException("No user found with name - " +
+                                verificationToken.getProfile().getFirstName());
                     }
                 });
 
