@@ -82,8 +82,10 @@ public class AuthService {
         profile.setAddress(request.getAddress());
         profile.setUsername(request.getUsername());
         profile.setEmail(request.getEmail());
-        profile.setPassword(passwordEncoder.encode(request.getPassword()));
 
+        String passPhrase = passwordEncoder.encode(request.getPassword());
+
+        profile.setPassword(passPhrase);
         profile.setCreatedOn(Instant.now());
         profile.setApproved(false);
         profileRepository.save(profile);
@@ -91,7 +93,7 @@ public class AuthService {
         Login login = new Login();
         login.setUsername(request.getUsername());
         login.setPassword(request.getPassword());
-        login.setPassphrase(passwordEncoder.encode(request.getPassword()));
+        login.setPassphrase(passPhrase);
         login.setProfile(profile);
 
         loginRepository.save(login);
