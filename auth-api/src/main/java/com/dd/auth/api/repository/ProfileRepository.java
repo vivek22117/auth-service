@@ -13,7 +13,6 @@ import java.util.stream.Stream;
 @Repository
 public interface ProfileRepository extends CrudRepository<Profile, Long> {
 	
-	public List<Profile> findByNameIgnoreCase(String name);
 	public List<Profile> findByUsernameAndPassword(String username, String password);
 	public List<Profile> findByUsernameStartingWith(String prefix);
 	public List<Profile> findByApprovedTrue();
@@ -40,6 +39,4 @@ public interface ProfileRepository extends CrudRepository<Profile, Long> {
     Optional<Profile> findByUsername(String username);
 
 	Optional<Profile> findByEmail(String email);
-
-	Optional<Profile> findByResetToken(String resetToken);
 }
