@@ -80,6 +80,7 @@ public class AuthController {
                 .status(HttpStatus.OK)
                 .body(Message.builder()
                         .message("Please check your email inbox for password reset instructions.")
+                        .status("Success")
                         .build());
     }
 
@@ -90,6 +91,7 @@ public class AuthController {
                 .status(HttpStatus.OK)
                 .body(Message.builder()
                         .message("You've successfully reset your password.")
+                        .status("Success")
                         .build());
     }
 }
