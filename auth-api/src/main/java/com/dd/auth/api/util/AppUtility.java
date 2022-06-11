@@ -24,7 +24,7 @@ public class AppUtility {
     public static final String AUTH_RESET_PASSWORD_URI = "/public/auth/reset_password";
     public static final String AUTH_PUBLIC_KEY_URI = "/auth/.well-know/jwks.json";
 
-    public static String refreshTokenEmailContent(String refreshTokenUrl) {
+    public static String refreshTokenEmailContent(String refreshTokenUrl, String firstName) {
 
         return "<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
@@ -34,16 +34,16 @@ public class AppUtility {
                 "    <title>Password Reset Link!</title>\n" +
                 "</head>\n" +
                 "<body style=\"background: whitesmoke; padding: 30px; height: 100%\">\n" +
-                "<h5 style=\"font-size: 18px; margin-bottom: 6px\">Dear example,</h5>\n" +
+                "<h5 style=\"font-size: 18px; margin-bottom: 6px\">Dear " + firstName + ",</h5>\n" +
                 "<p style=\"font-size: 16px; font-weight: 500\">Greetings from DoubleDigit-Solutions!</p>\n" +
-                "<p>Thank you for signing up to DoubleDigit Cloud-Solutions, \n" +
-                " please click on the below link to activate your account :</p>\n" +
+                "<p>Thank you for signing up to DoubleDigit-Solutions, \n" +
+                " please use below link to activate your account.</p>\n" +
                 "<href>" + refreshTokenUrl + "</href>\n" +
                 "</body>\n" +
                 "</html>";
     }
 
-    public static String resetPasswordEmailContent(String resetPasswordUrl) {
+    public static String resetPasswordEmailContent(String resetPasswordUrl, String firstName) {
 
         return "<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
@@ -53,7 +53,7 @@ public class AppUtility {
                 "    <title>Password Reset Link!</title>\n" +
                 "</head>\n" +
                 "<body style=\"background: whitesmoke; padding: 30px; height: 100%\">\n" +
-                "<h5 style=\"font-size: 18px; margin-bottom: 6px\">Dear XYZ,</h5>\n" +
+                "<h5 style=\"font-size: 18px; margin-bottom: 6px\">Dear " + firstName + ",</h5>\n" +
                 "<p style=\"font-size: 16px; font-weight: 500\">Greetings from DoubleDigit-Solutions!</p>\n" +
                 "<p>Please use below link to reset your password.</p>\n" +
                 "<href>" + resetPasswordUrl + "</href>\n" +
