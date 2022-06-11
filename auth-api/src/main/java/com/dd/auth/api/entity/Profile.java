@@ -1,8 +1,9 @@
 package com.dd.auth.api.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -13,7 +14,8 @@ import java.util.Set;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-@Data
+@Getter
+@Setter
 @Entity
 @NamedQuery(name = "Profile.findByFirstName", query = "FROM Profile WHERE name = ?1")
 @Table(name = "profile")
@@ -58,9 +60,6 @@ public class Profile {
 
     @Column(name = "created_on")
     private Instant createdOn;
-
-    @Column(name = "reset_token")
-    private String resetToken;
 
     @OneToOne(fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
