@@ -3,7 +3,6 @@ package com.dd.auth.api.exception;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -137,13 +136,26 @@ public class ApplicationControllerAdvice {
                 .body(new ApiCallError<>(HttpStatus.FORBIDDEN, Collections.singletonList(ex.getMessage())));
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ApiCallError<String>> handleBadRequestServerError(HttpServletRequest request, Exception ex) {
+        logger.error("handling BadRequestError {}\n", request.getRequestURI(), ex);
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ApiCallError<>(HttpStatus.BAD_REQUEST,
+                        Collections.singletonList(ex.getMessage()),
+                        "Failed"));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiCallError<String>> handleInternalServerError(HttpServletRequest request, Exception ex) {
         logger.error("handleInternalServerError {}\n", request.getRequestURI(), ex);
 
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ApiCallError<>(HttpStatus.INTERNAL_SERVER_ERROR, Collections.singletonList(ex.getMessage())));
+                .body(new ApiCallError<>(HttpStatus.INTERNAL_SERVER_ERROR,
+                        Collections.singletonList(ex.getMessage()),
+                        "Failed"));
     }
 
     @Data
