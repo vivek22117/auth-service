@@ -32,7 +32,7 @@ public class ApplicationControllerAdvice {
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(new ApiCallError<>(HttpStatus.BAD_REQUEST, Collections.singletonList(ex.getMessage())));
+                .body(new ApiCallError<>(HttpStatus.BAD_REQUEST, Collections.singletonList(ex.getMessage()), "Failed"));
     }
 
     @ExceptionHandler(InvalidParameterException.class)
@@ -168,9 +168,9 @@ public class ApplicationControllerAdvice {
             this.details = data;
         }
 
-        public ApiCallError(HttpStatus httpStatus, List<T> data, String stackTrace) {
+        public ApiCallError(HttpStatus httpStatus, List<T> data, String status) {
             this(httpStatus, data);
-            this.stackTrace = stackTrace;
+            this.status = status;
         }
 
     }
