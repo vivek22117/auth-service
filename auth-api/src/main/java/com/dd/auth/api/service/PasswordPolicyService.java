@@ -5,6 +5,7 @@ import com.dd.auth.api.entity.Login;
 import com.dd.auth.api.entity.PasswordResetToken;
 import com.dd.auth.api.entity.Profile;
 import com.dd.auth.api.exception.ApplicationException;
+import com.dd.auth.api.exception.BadRequestException;
 import com.dd.auth.api.exception.NotFoundException;
 import com.dd.auth.api.model.NotificationEmail;
 import com.dd.auth.api.model.dto.ForgotPasswordRequest;
@@ -22,6 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ValidationException;
 import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalAmount;
+import java.time.temporal.TemporalUnit;
 import java.util.UUID;
 
 import static com.dd.auth.api.util.AppUtility.API_AUTH_ROOT_URI;
@@ -78,8 +84,12 @@ public class PasswordPolicyService {
 
     public void getByResetPasswordToken(ResetPasswordRequest request) {
         PasswordResetToken token = passwordResetTokenRepository.findByToken(request.getToken())
-                .orElseThrow(() -> new NotFoundException("You've encountered some errors while trying to reset your password."));
+                .orElseThrow(() -> new BadRequestException("Invalid token provided to reset your password."));
 
+        if(token.getExpirationDate().isBefore(LocalDateTime.now())) {
+            passwordResetTokenRepository.delete(token);
+            throw new BadRequestException("Link expired. Generate new link!");
+        }
         updatePassword(token.getProfile(), request.getPassword());
         passwordResetTokenRepository.delete(token);
     }
@@ -93,7 +103,7 @@ public class PasswordPolicyService {
 
         Login login = profile.getLogin();
         login.setPassword(newPassword);
-        login.setPassphrase(passwordEncoder.encode(newPassword));
+        login.setPassphrase(encodedPassword);
         loginRepository.save(login);
     }
 }
