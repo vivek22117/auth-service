@@ -31,5 +31,10 @@ resource "aws_service_discovery_service" "auth_api_sd" {
       failure_threshold = lookup(health_check_custom_config.value, "failure_threshold", null)
     }
   }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = "${path.module}/scripts/servicediscovery-drain.sh ${self.id}"
+  }
 }
 
