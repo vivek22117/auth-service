@@ -60,7 +60,7 @@ jobs:
 
       # Change script permission
       - name: Change script permission
-        working-directory: ${{ env.maven_dir }}
+        working-directory: ${{ env.script_path }}
         run: sudo chmod +x servicediscovery-drain.sh
 
       # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
