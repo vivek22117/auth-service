@@ -101,11 +101,11 @@ public class AuthService {
         addPermissions(login, profile);
 
         String token = generateVerificationToken(profile);
-        LOGGER.info("http://localhost:9004/api/public/auth/accountVerification/" + token);
+        LOGGER.info("http://auth-api.cloud-interview.in/api/public/auth/accountVerification/" + token);
         mailService.sendEmail(NotificationEmail.builder()
                 .subject("Account Activation!!")
                 .recipient(profile.getEmail())
-                .body(AppUtility.refreshTokenEmailContent("http://localhost:9004/api/public/auth/accountVerification/"
+                .body(AppUtility.refreshTokenEmailContent("http://auth-api.cloud-interview.in/api/public/auth/accountVerification/"
                         + token, profile.getFirstName())).build());
     }
 
