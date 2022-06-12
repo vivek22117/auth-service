@@ -1,5 +1,7 @@
 # auth-service
 
+* https://aws.amazon.com/premiumsupport/knowledge-center/ecs-pull-container-api-error-ecr/#:~:text=You%20can%20receive%20this%20error,to%20pull%20or%20push%20images
+
 
 ### DB Setup for Bastion Host
 * https://techviewleo.com/install-postgresql-13-on-amazon-linux/
