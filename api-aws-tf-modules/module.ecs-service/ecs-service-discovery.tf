@@ -25,16 +25,16 @@ resource "aws_service_discovery_service" "auth_api_sd" {
     routing_policy = local.dns_routing_policy
   }
 
-  dynamic "health_check_custom_config" {
-    for_each = [var.service_discovery_health_check_custom_config]
-    content {
-      failure_threshold = lookup(health_check_custom_config.value, "failure_threshold", null)
-    }
-  }
+  //  dynamic "health_check_custom_config" {
+  //    for_each = [var.service_discovery_health_check_custom_config]
+  //    content {
+  //      failure_threshold = lookup(health_check_custom_config.value, "failure_threshold", null)
+  //    }
+  //  }
 
-  provisioner "local-exec" {
-    when    = destroy
-    command = "${path.module}/scripts/servicediscovery-drain.sh ${self.id}"
-  }
+  //  provisioner "local-exec" {
+  //    when    = destroy
+  //    command = "${path.module}/scripts/servicediscovery-drain.sh ${self.id}"
+  //  }
 }
 
