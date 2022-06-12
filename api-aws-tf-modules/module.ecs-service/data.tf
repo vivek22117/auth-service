@@ -37,6 +37,11 @@ data "template_file" "ecs_service_policy_template" {
 
 data "template_file" "ecs_task_policy_template" {
   template = file("${path.module}/policy-doc/ecs-task-policy.json")
+
+  vars = {
+    aws_region     = var.default_region
+    aws_account_id = data.aws_caller_identity.current.account_id
+  }
 }
 
 data "template_file" "auth_service_task" {
