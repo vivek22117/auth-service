@@ -35,12 +35,12 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @Configuration
 public class AWSClientConfig {
+    private static final Logger logger = getLogger(AWSClientConfig.class);
 
     private final static int INITIAL_POOL_SIZE = 10;
     private final static int MAX_POOL_SIZE = 50;
     private final static int CONNECTION_TIMEOUT = 2000;
 
-    private static final Logger logger = getLogger(AWSClientConfig.class);
     private static AWSCredentialsProvider awsCredentialsProvider;
 
     @Value("${isRunningInEC2: No value}")

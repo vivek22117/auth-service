@@ -1,9 +1,9 @@
 [
   {
     "Image": "${auth_api_image}:latest",
-    "Memory": 256,
+    "Memory": 1024,
     "Name": "auth-service",
-    "cpu": 256,
+    "cpu": 512,
     "LogConfiguration": {
       "LogDriver": "awslogs",
       "Options": {
