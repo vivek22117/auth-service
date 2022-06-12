@@ -18,6 +18,7 @@ on:
 env:
   tf_version: '0.13.5'
   tf_working_dir_app: './api-aws-tf-modules-deployment/ecs-resources'
+  script_path: './api-aws-tf-modules/module.ecs-service/scripts'
   aws_region: 'us-east-1'
   environment: ${{ github.event.inputs.env }}
 
@@ -56,6 +57,11 @@ jobs:
           echo AWS_ACCOUNT=$ACCOUNT_ID >> $GITHUB_ENV
           CURRENT_REGION=$(aws ec2 describe-availability-zones --query 'AvailabilityZones[0].[RegionName]' --output text)
           echo AWS_REGION=$CURRENT_REGION >> $GITHUB_ENV
+
+      # Change script permission
+      - name: Change script permission
+        working-directory: ${{ env.maven_dir }}
+        run: sudo chmod +x servicediscovery-drain.sh
 
       # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
       - name: Setup Terraform
