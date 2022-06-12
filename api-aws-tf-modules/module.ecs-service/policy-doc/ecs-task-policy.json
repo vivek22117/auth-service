@@ -26,6 +26,23 @@
         "ecs:Poll",
         "ecs:StartTelemetrySession"
       ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:GetResourcePolicy",
+        "secretsmanager:GetSecretValue",
+        "secretsmanager:DescribeSecret",
+        "secretsmanager:ListSecretVersionIds"
+      ],
+      "Resource": [
+        "arn:aws:secretsmanager:us-east-1:102954369745:secret:auth-service/client/db-credentials-tjnfJD"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": "secretsmanager:ListSecrets",
+      "Resource": "*"
     }
   ]
 }
