@@ -40,7 +40,7 @@
         "secretsmanager:ListSecretVersionIds"
       ],
       "Resource": [
-        "arn:aws:secretsmanager:${aws_region}:${aws_account_id}:secret:auth-service/client/db-credentials-tjnfJD"
+        "${secret_arn}"
       ]
     },
     {

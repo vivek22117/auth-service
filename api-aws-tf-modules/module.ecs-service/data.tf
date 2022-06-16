@@ -21,6 +21,16 @@ data "terraform_remote_state" "ecs_cluster" {
   }
 }
 
+data "terraform_remote_state" "db_cluster" {
+  backend = "s3"
+
+  config = {
+    bucket = "${var.environment}-tfstate-${data.aws_caller_identity.current.account_id}-${var.default_region}"
+    key    = "state/${var.environment}/auth-api/db/terraform.tfstate"
+    region = var.default_region
+  }
+}
+
 data "terraform_remote_state" "auth_api_ecr_state" {
   backend = "s3"
 
@@ -39,8 +49,7 @@ data "template_file" "ecs_task_policy_template" {
   template = file("${path.module}/policy-doc/ecs-task-policy.json")
 
   vars = {
-    aws_region     = var.default_region
-    aws_account_id = data.aws_caller_identity.current.account_id
+    secret_arn = data.terraform_remote_state.db_cluster.outputs.db_secret_arn
   }
 }
 

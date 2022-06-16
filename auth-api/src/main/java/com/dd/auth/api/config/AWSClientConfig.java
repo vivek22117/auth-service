@@ -152,7 +152,7 @@ public class AWSClientConfig {
 
     private AwsSecrets getSecret(AWSSecretsManager client, Gson gson) {
 
-        String secretName = "auth-service/client/db-credentials";
+        String secretName = "auth/service/db-credentials";
 
         String secret;
         GetSecretValueRequest getSecretValueRequest = new GetSecretValueRequest()
