@@ -5,7 +5,7 @@ component_name = "auth-api"
 ecs_task_mode  = "bridge"
 ecs_dns_name   = "auth-api.cloud-interview.in"
 
-service_desired_count = 2
+service_desired_count = 1
 service_launch_type   = "EC2"
 
 default_target_group_port = 9004
