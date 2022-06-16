@@ -17,7 +17,7 @@ import java.util.Map;
 import static com.dd.auth.api.util.AppUtility.*;
 
 
-@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
+@CrossOrigin(originPatterns = "*", allowedHeaders = "*", maxAge = 3600)
 @RestController
 @RequestMapping(API_AUTH_ROOT_URI)
 @Slf4j
@@ -37,7 +37,7 @@ public class AuthController {
         this.passwordPolicyService = passwordPolicyService;
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @CrossOrigin(originPatterns = "*", allowedHeaders = "*")
     @PostMapping(AUTH_SIGNUP_URI)
     @Timed(value = "auth.signup", description = "Time taken to signUp")
     public ResponseEntity<String> signUp(@RequestBody RegisterRequest request) {
